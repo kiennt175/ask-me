@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "askme-style": "git@github.com:kiennt175/askme-style.git",
-    "login-signup-form-style": "git@github.com:kiennt175/login-signup-form-style.git"
+    "login-signup-form-style": "git@github.com:kiennt175/login-signup-form-style.git",
+    "tata-js": "git@github.com:kiennt175/tata-js.git"
   }
 }

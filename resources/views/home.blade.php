@@ -2,7 +2,6 @@
 
 @section('style')
 	@parent
-	<link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endsection
 
 @section('content')
@@ -12,7 +11,7 @@
 				box_background="transparent" box_color="#FFF">
 				<div class="row">
 					<div class="col-md-3">
-						<h2>Welcome to Ask me</h2>
+						<h2>Welcome to ASK me</h2>
 						<p>Find the best answer to your question about English, help others answer theirs</p>
 						<div class="clearfix"></div>
 						<a class="color button dark_button medium" href="#">About Us</a>
@@ -23,17 +22,16 @@
 							<p>
 								<textarea rows="4" id="question_title"
 									onfocus="if(this.value=='Ask any question about English and you be sure find your answer ?')this.value='';"
-									onblur="if(this.value=='')this.value='Ask any question about English and you be sure find your answer ?';">Ask any question about English and you be sure find your answer ?
-								</textarea>
+									onblur="if(this.value=='')this.value='Ask any question about English and you be sure find your answer ?';">Ask any question about English and you be sure find your answer ?</textarea>
 								<i class="icon-pencil"></i>
 								<span class="color button small publish-question">Ask Now</span>
 							</p>
 						</form>
 					</div>
-				</div><!-- End row -->
-			</div><!-- End box_icon -->
-		</div><!-- End container -->
-	</div><!-- End section-warp -->
+				</div>
+			</div>
+		</div>
+	</div>
 	<section class="container main-content">
 		<div class="row">
 			<div class="col-md-9">
@@ -53,27 +51,32 @@
 								<a class="question-report" href="#">Report</a>
 								<div class="question-type-main"><i class="icon-question-sign"></i>Question</div>
 								<div class="question-author">
-									<a href="#" original-title="ahmed"
-										class="question-author-img tooltip-n"><span></span><img alt=""
-											src="https://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+									<a href="#" original-title="ahmed" class="question-author-img tooltip-n">
+										<span></span>
+										<img alt="" src="https://2code.info/demo/html/ask-me/images/demo/avatar.png">
+									</a>
 								</div>
 								<div class="question-inner">
 									<div class="clearfix"></div>
-									<p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque
+									<p class="question-desc">
+										Duis dapibus aliquam mi, eget euismod sem scelerisque
 										ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in
 										neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi
 										tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur
-										vitae velit in neque dictum blandit.</p>
+										vitae velit in neque dictum blandit.
+									</p>
 									<div class="question-details">
-										<span class="question-answered question-answered-done"><i
-												class="icon-ok"></i>solved</span>
+										<span class="question-answered question-answered-done">
+											<i class="icon-ok"></i>solved</span>
 										<span class="question-favorite"><i class="icon-star"></i>5</span>
 									</div>
-									<span class="question-category"><a href="#"><i
-												class="icon-folder-close"></i>wordpress</a></span>
+									<span class="question-category">
+										<a href="#"><i class="icon-folder-close"></i>wordpress</a>
+									</span>
 									<span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-									<span class="question-comment"><a href="#"><i class="icon-comment"></i>5
-											Answer</a></span>
+									<span class="question-comment">
+										<a href="#"><i class="icon-comment"></i>5 Answer</a>
+									</span>
 									<span class="question-view"><i class="icon-user"></i>70 views</span>
 									<div class="clearfix"></div>
 								</div>
@@ -85,9 +88,10 @@
 								<a class="question-report" href="#">Report</a>
 								<div class="question-type-main"><i class="icon-signal"></i>Poll</div>
 								<div class="question-author">
-									<a href="#" original-title="ahmed"
-										class="question-author-img tooltip-n"><span></span><img alt=""
-											src="https://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+									<a href="#" original-title="ahmed" class="question-author-img tooltip-n">
+										<span></span>
+										<img alt="" src="https://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+									</a>
 								</div>
 								<div class="question-inner">
 									<div class="clearfix"></div>
@@ -1203,4 +1207,8 @@
 			</aside><!-- End sidebar -->
 		</div><!-- End row -->
 	</section><!-- End container -->
+@endsection
+
+@section('scripts')
+	@parent
 @endsection
