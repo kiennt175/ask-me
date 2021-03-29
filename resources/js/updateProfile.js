@@ -18,10 +18,16 @@ $(document).ready(function(){
             success: function(data){
                 $('#website-link').val(data.website_link);
                 $(".name").html(data.name);
-                tata.success('Profile', 'Update profile successfully!');
+                tata.success('Profile', 'Update profile successfully!', {
+                    duration: 5000,
+                    animate: 'slide'
+                });
             },
             error: function(error){
-                tata.error('Profile', 'Failed to update profile!');
+                tata.error('Profile', 'Failed to update profile!', {
+                    duration: 5000,
+                    animate: 'slide'
+                });
             }
         });
     });

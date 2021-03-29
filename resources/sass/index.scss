@@ -4,3 +4,6 @@
 .search-input {
     width: 322px !important;
 }
+input[type="text"], input[type="password"], textarea#bio {
+    color: inherit !important;
+}

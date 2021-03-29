@@ -14,13 +14,22 @@ $(document).ready(function(){
             success: function(data){
                 console.log(data.response)
                 if (data.response == 1) {
-                    tata.success('Password', 'Change password successfully!');
+                    tata.success('Password', 'Change password successfully!', {
+                        duration: 5000,
+                        animate: 'slide'
+                    });
                 } else {
-                    tata.error('Password', 'The data is not correct!');
+                    tata.error('Password', 'The data is not correct!', {
+                        duration: 5000,
+                        animate: 'slide'
+                    });
                 }
             },
             error: function(error){
-                tata.error('Password', 'Failed to change password!');
+                tata.error('Password', 'Failed to change password!', {
+                    duration: 5000,
+                    animate: 'slide'
+                });
             }
         });
     });

@@ -24,11 +24,14 @@ class SocialLoginController extends Controller
         if (!$existingUser) {
             // Have no account
             try {
+                if ($provider == "google") $avatar = str_replace('=s96-c', '', $userInfo->avatar_original);
+                if ($provider == "facebook") $avatar = $userInfo->avatar_original . "&access_token=" . $userInfo->token;
                 DB::beginTransaction();
                 // Create user
                 $user = User::create([
                     'name' => $userInfo->name,
-                    'email' => $userInfo->email
+                    'email' => $userInfo->email,
+                    'avatar' => $avatar
                 ]);
                 // Create provider
                 $user->providers()->create([

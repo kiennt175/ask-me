@@ -1,12 +1,18 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/avatar.css": "/css/avatar.css",
+    "/css/editor.css": "/css/editor.css",
     "/css/index.css": "/css/index.css",
+    "/css/ipa.css": "/css/ipa.css",
     "/css/login.css": "/css/login.css",
+    "/css/recorder.css": "/css/recorder.css",
     "/css/register.css": "/css/register.css",
     "/css/user-profile.css": "/css/user-profile.css",
     "/js/avatar.js": "/js/avatar.js",
     "/js/bootstrap.js": "/js/bootstrap.js",
     "/js/changePassword.js": "/js/changePassword.js",
+    "/js/editor.js": "/js/editor.js",
+    "/js/postQuestion.js": "/js/postQuestion.js",
+    "/js/recorder.js": "/js/recorder.js",
     "/js/updateProfile.js": "/js/updateProfile.js"
 }

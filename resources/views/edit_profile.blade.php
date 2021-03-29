@@ -29,7 +29,7 @@
                             @method('PATCH')
                             <div class="col-md-4">
                                 <div class="avatar-wrapper">
-                                    <img src="{{ $user->avatar ? asset("images/avatars/$user->avatar") : asset('images/default_avatar.png') }}" alt="" class="profile-pic">
+                                    <img src="{{ $user->avatar ? $user->avatar : asset('images/default_avatar.png') }}" alt="" class="profile-pic">
                                     <div class="upload-button">
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                     </div>
