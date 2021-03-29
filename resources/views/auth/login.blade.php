@@ -20,7 +20,7 @@
                         <a href="{{ route('register') }}" class="signup-image-link">Create an account</a>
                     </div>
                     <div class="signin-form">
-                        <h2 class="form-title">Log in</h2>
+                        <h2 class="form-title">Log in to <a href="{{ route('home') }}" class="home">ASKme</a></h2>
                         <form method="POST" action="{{ route('login') }}" class="register-form" id="login-form">
                             @csrf 
                             @error('email')
@@ -52,8 +52,8 @@
                         <div class="social-login">
                             <span class="social-label">Or login with</span>
                             <ul class="socials">
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a href="{{ route('login.social.redirect', 'facebook') }}"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="{{ route('login.social.redirect', 'google') }}"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
                             </ul>
                         </div>
                     </div>

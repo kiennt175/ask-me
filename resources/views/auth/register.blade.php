@@ -16,7 +16,7 @@
             <div class="container">
                 <div class="signup-content">
                     <div class="signup-form">
-                        <h2 class="form-title">Sign up</h2>
+                        <h2 class="form-title">Sign up for <a href="{{ route('home') }}" class="home">ASKme</a></h2>
                         <form method="POST" action="{{ route('register') }}" class="register-form" id="register-form">
                             @csrf
                             <div class="form-group">
