@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ASK me</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="shortcut icon" href="{{ asset('bower_components/askme-style/images/favicon.png') }}">
     
+    @yield('title')
+
     @section('style')
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/style.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/css/skins/blue.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     @show	
-
 </head>
 <body>
     <div class="loader">
@@ -26,8 +26,9 @@
                 <div class="logo"><a href="{{ route('home') }}"><img alt="" src="{{ asset('bower_components/askme-style/images/logo.png') }}"></a></div>
                 <nav class="navigation">
                     <ul>
-                        <li class="ask_question"><a href="cat_question.html">Questions</a>
+                        <li class="ask_question current_page_item"><a href="javascript:void(0)">Questions</a>
                             <ul>
+                                <li><a href="{{ route('user.showAskForm') }}">Ask Question</a></li>
                                 <li><a href="cat_question.html">Questions Category</a></li>
                                 <li><a href="single_question.html">Question Single</a></li>
                                 <li><a href="single_question_poll.html">Poll Question Single</a></li>
@@ -116,7 +117,7 @@
         <script src="{{ asset('bower_components/askme-style/js/jquery.bxslider.min.js') }}"></script>
         <script src="{{ asset('bower_components/askme-style/js/custom.js') }}"></script>
         <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
+        <script src="{{ asset('ckeditor5-comment/build/ckeditor.js') }}"></script>
     @show
-    
 </body>
 </html>

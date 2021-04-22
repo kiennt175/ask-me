@@ -46,7 +46,7 @@
                                 <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
                             </div>
                            <div class="form-group">
-                                <a href="#" class="forgot-password">Forgot your password</a>
+                                <a href="{{ route('password.request') }}" class="forgot-password">Forgot your password</a>
                             </div>
                         </form>
                         <div class="social-login">
@@ -63,5 +63,23 @@
     </div>
     <script src="{{ asset('bower_components/login-signup-form-style/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/login-signup-form-style/js/main.js') }}"></script>
+    @if (session('mail-successfully'))
+        <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
+        <script>
+            tata.success('Reset password', 'Please check your e-mail to reset password!', {
+                duration: 5000,
+                animate: 'slide'
+            });
+        </script>
+    @endif
+    @if (session('new-password'))
+        <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
+        <script>
+            tata.success('Reset password', 'Reset password successfully!', {
+                duration: 5000,
+                animate: 'slide'
+            });
+        </script>
+    @endif
 </body>
 </html>

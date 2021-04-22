@@ -7,8 +7,8 @@ use App\Models\User;
 
 class Provider extends Model
 {
-    protected $fillable = [
-        'provider',
+    protected $fillable = [ 
+        'provider' 
     ];
 
     public function user()

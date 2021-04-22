@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Jobs\NewPassword;
 
 class UserController extends Controller
 {
@@ -44,6 +46,7 @@ class UserController extends Controller
             $avatar = time() . '_' . $avatarFile->getClientOriginalName();
             $destinationPath = public_path('images/avatars');
             $avatarFile->move($destinationPath, $avatar);
+            $avatar = "http://localhost:8000/images/avatars/$avatar" ;
         }
         if ($request->website_link) {
             $request->website_link = str_ireplace('https://', '', $request->website_link);
@@ -77,5 +80,49 @@ class UserController extends Controller
         }
 
         return response()->json(['response' => 0]);
+    }
+
+    public function sendResetPasswordLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->with('email-error', 'The e-mail does not exist!');
+        }
+        $token = Str::random(8);
+        $hashedToken = sha1($token); 
+        $user->update([
+            'reset_password_token' => $hashedToken
+        ]);
+        $data = [
+            'token' => $token,
+            'userId' => $user->id
+        ];
+        dispatch(new NewPassword($data, $request->email));
+           
+        return redirect()->route('login')->with('mail-successfully', true);
+    }
+
+    public function newPassword(Request $request)
+    {
+        $userId = $request->route('userId');
+
+        return view('new_password', compact('userId'));
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $this->validate($request, 
+            [
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ],
+        );
+        $user = User::find($request->route('userId'));
+        $user->update([
+            'password' => Hash::make($request->password),
+            'reset_password_token' => null
+        ]);
+
+        return redirect()->route('login')->with('new-password', true);
     }
 }

@@ -14,6 +14,7 @@
   "dependencies": {
     "askme-style": "git@github.com:kiennt175/askme-style.git",
     "login-signup-form-style": "git@github.com:kiennt175/login-signup-form-style.git",
-    "tata-js": "git@github.com:kiennt175/tata-js.git"
+    "tata-js": "git@github.com:kiennt175/tata-js.git",
+    "forgot-password-mail": "git@github.com:kiennt175/forgot-password-mail.git"
   }
 }

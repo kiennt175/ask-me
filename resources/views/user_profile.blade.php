@@ -25,7 +25,7 @@
 								<h2>{{ $user->name }}</h2>
 								<b>{{ $user->bio }}</b>
 								<p></p>
-								<div class="user-profile-img"><img src="{{ $user->avatar ? asset("images/avatars/$user->avatar") : asset('images/default_avatar.png') }}" alt="admin"></div>
+								<div class="user-profile-img"><img src="{{ $user->avatar ? $user->avatar : asset('images/default_avatar.png') }}" alt="admin"></div>
 								<div class="ul_list ul_list-icon-ok about-user">
 									<ul>
 										<li><i class="icon-plus"></i>Registerd : <span>{{ \Carbon\Carbon::parse($user->created_at)->format('M d, Y') }}</span></li>
