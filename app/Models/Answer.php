@@ -9,9 +9,16 @@ use App\Models\Image;
 use App\Models\Content;
 use App\Models\Vote;
 use App\Models\Comment;
+use App\Models\Conversation;
 
 class Answer extends Model
 {
+    protected $fillable = [ 
+        'user_id',
+        'question_id',
+        'vote_number'
+    ];
+
     public function medias()
     {
         return $this->morphMany(Media::class, 'mediable');
@@ -22,7 +29,7 @@ class Answer extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function contents()
+    public function content()
     {
         return $this->morphOne(Content::class, 'contentable');
     }
@@ -40,5 +47,10 @@ class Answer extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class);
     }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
+use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class PostController extends Controller
 {
@@ -30,13 +32,25 @@ class PostController extends Controller
         if (!$request->content) {
             return response()->json(['response' => 0]); 
         } 
-        $tags = explode(",", $request->tags);
         DB::transaction(function () use ($request) {
             // save question
             $question = Question::create([
                 'user_id' => Auth::id(),
                 'title' => $request->title
             ]);
+            // save tags
+            $tags = explode(",", $request->tags);
+            $formattedTags = [];
+            foreach ($tags as $tag) {
+                $element = [
+                    'tag' => $tag
+                ];
+                array_push($formattedTags, $element);
+            }
+            DB::table('tags')->insertOrIgnore($formattedTags);
+            $ids = Tag::whereIn('tag', $tags)->select('id')->get()->toArray();
+            $ids = Arr::flatten($ids);
+            $question->tags()->attach($ids);
             // save content
             $question->content()->create([
                 'content' => $request->content,
@@ -69,5 +83,13 @@ class PostController extends Controller
         });
 
         return response()->json(['response' => 1]);
+    }
+
+    public function newsfeed()
+    {
+        $user = Auth::user();
+        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('newsfeed', compact(['questions', 'user']));
     }
 }

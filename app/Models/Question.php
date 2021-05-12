@@ -10,6 +10,7 @@ use App\Models\Media;
 use App\Models\Image;
 use App\Models\Content;
 use App\Models\Vote;
+use App\Models\Answer;
 
 class Question extends Model
 {
@@ -53,5 +54,10 @@ class Question extends Model
     public function votes()
     {
         return $this->morphMany(Vote::class, 'voteable');
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

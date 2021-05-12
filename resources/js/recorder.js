@@ -21,7 +21,7 @@ $(document).ready(function () {
         mt.src = url;
         hf.href = url;
         hf.download = `${counter++}${media.ext}`;
-        hf.innerHTML = `ClickToSave${hf.download}`;
+        // hf.innerHTML = `ClickToSave${hf.download}`;
         li.appendChild(mt);
         li.appendChild(hf);
         ul.appendChild(li);

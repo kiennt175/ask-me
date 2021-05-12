@@ -137,7 +137,7 @@
     </div>
     <section class="container main-content">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="page-content ask-question">
                     <div class="boxedtitle page-title"><h2>Ask A Public Question</h2></div>
                     <div class="form-style form-style-3" id="question-submit">
@@ -183,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            <aside class="col-md-5 sidebar">
+            <aside class="col-md-4 sidebar">
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
@@ -268,6 +268,7 @@
             </aside>
         </div>
     </section>
+    <script src="{{ asset('js/editor.js') }}"></script>
 @endsection
 
 @section('scripts')
@@ -276,7 +277,7 @@
         var avatarURL = "{{ $avatar }}";
         avatarURL = avatarURL.replace('amp;', '');
     </script>
-    <script src="{{ asset('js/editor.js') }}"></script>
     <script src="{{ asset('js/recorder.js') }}"></script>
     <script src="{{ asset('js/postQuestion.js') }}"></script>
+    <script src="{{ asset('js/askQuestionPage.js') }}"></script>
 @endsection

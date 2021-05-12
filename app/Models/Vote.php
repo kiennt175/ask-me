@@ -8,7 +8,7 @@ use App\Models\User;
 class Vote extends Model
 {
     protected $fillable = [ 
-        'votes' 
+        'user_id' 
     ];
 
     public function voteable()

@@ -18,10 +18,7 @@ $(document).ready(function(){
             success: function(data){
                 console.log(data.response)
                 if (data.response == 1) {
-                    tata.success('Ask Question', 'Post question successfully!', {
-                        duration: 5000,
-                        animate: 'slide'
-                    });
+                    window.location.href = "http://localhost:8000/user/newsfeed";
                 } else {
                     tata.error('Ask Question', 'Please fill out the required fields!', {
                         duration: 5000,
