@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/ipa.css') }}">
     <link rel="stylesheet" href="{{ asset('css/recorder.css') }}">
     <link rel="stylesheet" href="{{ asset('css/questionDetailsPage.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/cute-alert/style.css') }}">
     <script>
         if (!document.addEventListener) {
             parent.location.href = 'ie8/type.html';
@@ -78,10 +79,18 @@
             } else {
                 finalAnswer = answerString;
             }
-            document.forms[2].resultview.value = finalAnswer;
-            document.forms[2].result.value = '/' + finalAnswerWord + '/';
-            finalAnswerWeb = oldStringLong;
-            document.forms[2].resultweb.value = '/' + finalAnswerWeb + '/';
+            if (!'{{ Auth::check() }}') {
+                document.forms[1].resultview.value = finalAnswer;
+                document.forms[1].result.value = '/' + finalAnswerWord + '/';
+                finalAnswerWeb = oldStringLong;
+                document.forms[1].resultweb.value = '/' + finalAnswerWeb + '/';
+            } else {
+                document.forms[2].resultview.value = finalAnswer;
+                document.forms[2].result.value = '/' + finalAnswerWord + '/';
+                finalAnswerWeb = oldStringLong;
+                document.forms[2].resultweb.value = '/' + finalAnswerWeb + '/';
+            }
+            
         }
         //--------------------------------------------------------------------
         function chooseMe(foo) {
@@ -148,24 +157,12 @@
     {{-- <script src="{{ asset('js/askQuestionPage.js') }}"></script> --}}
     <script src="{{ asset('js/questionDetailsPage.js') }}"></script>
     <script src="{{ asset('js/voteQuestion.js') }}"></script>
-    
     <script src="{{ asset('js/postAnswer.js') }}"></script>
     <script src="{{ asset('js/voteAnswer.js') }}"></script>
     <script src="{{ asset('js/redirectLogin.js') }}"></script>
-    {{-- <script src="{{ asset('bower_components/jscroll/jquery.jscroll.js') }}"></script>
-	<script src="{{ asset('js/jscroll.js') }}"></script> --}}
-    <script>
-        $(window).scroll(function() {
-  sessionStorage.scrollTop = $(this).scrollTop();
-});
-
-$(document).ready(function() {
-  if (sessionStorage.scrollTop != "undefined") {
-    $(window).scrollTop(sessionStorage.scrollTop);
-  }
-});
-
-    </script>
+    <script src="{{ asset('js/bestAnswer.js') }}"></script>
+    <script src="{{ asset('bower_components/cute-alert/cute-alert.js') }}"></script>
+    <script src="{{ asset('js/addComment.js') }}"></script>
 @endsection
 
 @section('content')
@@ -175,24 +172,24 @@ $(document).ready(function() {
                 <div class="col-md-12">
                     <h1>Questions</h1>
                 </div>
-            </div><!-- End row -->
-        </section><!-- End container -->
-    </div><!-- End breadcrumbs -->
+            </div>
+        </section>
+    </div>
     <section class="container main-content">
         <div class="row">
             <div class="col-md-8">
                 <div class="about-author clearfix">
                     <div class="author-image">
-                        <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="{{ $question->user->avatar ? $question->user->avatar : asset('images/default_avatar.png') }}"></a>
+                        <a href="#" original-title="author" class="tooltip-n"><img alt="" src="{{ $question->user->avatar ? $question->user->avatar : asset('images/default_avatar.png') }}"></a>
                     </div>
                     <div class="author-bio">
-                        <h3>{{ $question->user->name }}</h3>
-                        uername
-                        <button>Follow</button>
+                        <a href="{{ route('user.show', $question->user->id) }}"><h3>{{ $question->user->name }}</h3></a>
+                        <button class="follow-user">Follow This User</button>
+                        <span>{{ '@' . $question->user->username }}</span>
                     </div>
-                </div><!-- End about-author -->
+                </div>
                 <article class="question single-question question-type-normal">
-                    <h2>
+                    <h2 class="question-title">
                         <a href="{{ route('questions.show', $question->id) }}">{{ $question->title }}</a>
                     </h2>
                     @if ($question->best_answer_id)
@@ -208,11 +205,51 @@ $(document).ready(function() {
                                 <div id="editor"></div>
                                 <div id="sidebar" class="ckeditor-sidebar"></div>
                             </div> 
+                            <br>
+                            @if ($question->images->count()) 
+                                <div class="bxslider" sty>
+                                    @php 
+                                        $imageNumber = $question->images->count()
+                                    @endphp
+                                    @foreach ($question->images as $key => $image)
+                                        <div class="slide" >
+                                            <div class="grid-bxslider">
+                                                <div class="bxslider-overlay t_center">
+                                                    <a href="#" class="bxslider-title">
+                                                        <br>
+                                                        <h4>{{ ++$key }}/{{ $imageNumber }}</h4>
+                                                    </a>
+                                                    <a href="{{ $image->url }}" class="prettyPhoto" rel="prettyPhoto">
+                                                        <span class="overlay-lightbox">
+                                                            <i class="icon-search"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>  
+                                                <div style="width:154.5px; height:96.297px"><img style="height: 100%; width: 100%; object-fit: contain" src="{{ $image->url }}" alt=""></div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            @if ($question->medias->count())
+                                <div>
+                                    @foreach ($question->medias as $key => $media)
+                                        <audio controls controlsList="nodownload">
+                                            <source src="{{ $media->url }}" type="audio/ogg">
+                                            <source src="{{ $media->url }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                        <span>&nbsp;</span>
+                                    @endforeach
+                                </div>
+                                <br>
+                            @endif
                             <div class="tags-block">
                                 @foreach ($question->tags as $tag)
 									<button class="tags">{{ $tag->tag }}</button>
 								@endforeach
                             </div>
+                            <br>
                         </div>
                         <div class="question-details">
                             <span class="question-answered question-answered-done vote-number">
@@ -228,23 +265,28 @@ $(document).ready(function() {
                             {{-- <span class="question-favorite"><i class="icon-star"></i>5</span> --}}
                         </div>
                         {{-- <span class="question-category"><a href="#"><i class="icon-folder-close"></i>wordpress</a></span> --}}
-                        <span class="question-date"><i class="icon-time"></i>{{ $question->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
+                        <span class="question-date"><i class="icon-time"></i>{{ Carbon\Carbon::parse($question->created_at)->diffForHumans() }}</span>
                         <span class="question-comment"><a href="#"><i class="icon-comments"></i>{{ $question->answers->count() }} answers</a></span>
                         <span class="question-view"><i class="icon-eye-open"></i>{{ $question->view_number }} views</span>
-                        <span class="single-question-vote-result"><button id="edit">Edit</button></span>
+                        @if ($question->updated)
+                            <span class="question-view question-edited"><i class="icon-pencil"></i>edited {{ Carbon\Carbon::parse($question->updated_at)->diffForHumans() }}</span>
+                        @endif
+                        @if (Auth::id() == $question->user->id)
+                            <span class="single-question-vote-result"><button class="question-options" id="delete-question">Delete</button></span>
+                            <a href="{{ route('questions.edit', $question->id) }}"><span class="single-question-vote-result"><button class="question-options" id="edit-question">Edit</button></span></a>
+                        @endif
                         {{-- <ul class="single-question-vote">
                             <li><a href="#" class="single-question-vote-down" title="Dislike"><i class="icon-thumbs-down"></i></a></li>
                             <li><a class="question-report single-question-vote-up" href="#">Report</a></li>
                         </ul> --}}
-
                         <div class="clearfix"></div>
                     </div>
                 </article>
                 <div class="share-tags page-content">
                     <div class="question-tags">
                         <button id="follow-this-question">Follow This Question</button>
-                        <span>&nbsp;</span>
-                        <button id="report">Report</button>
+                        {{-- <span>&nbsp;</span> --}}
+                        {{-- <button id="report">Report</button> --}}
                     </div>
                     <div class="share-inside-warp">
                         <ul>
@@ -261,11 +303,10 @@ $(document).ready(function() {
                         </ul>
                         <span class="share-inside-f-arrow"></span>
                         <span class="share-inside-l-arrow"></span>
-                    </div><!-- End share-inside-warp -->
+                    </div>
                     <div class="share-inside"><i class="icon-share-alt"></i>Share</div>
                     <div class="clearfix"></div>
-                </div><!-- End share-tags -->
-                
+                </div>
                 <div id="commentlist" class="page-content">
                     <div class="boxedtitle page-title"  id="tab-top">
                         <h2>
@@ -428,7 +469,7 @@ $(document).ready(function() {
                                         <div class="avatar"><img alt="" src="{{ $answer->user->avatar ? $answer->user->avatar : asset('images/default_avatar.png') }}"></div>
                                         <div class="comment-text">
                                             <div class="author clearfix">
-                                                <div class="comment-author"><a href="#">{{ $answer->user->name }}</a></div>
+                                                <div class="comment-author"><a href="{{ route('user.show', $answer->user_id) }}">{{ $answer->user->name }}</a></div>
                                                 {{-- <div class="comment-vote"> --}}
                                                     {{-- <ul class="question-vote"> --}}
                                                         {{-- <li><a href="#" class="question-vote-up" title="Like"></a></li>
@@ -442,19 +483,60 @@ $(document).ready(function() {
                                                 {{-- </div> --}}
                                                 {{-- <span class="question-vote-result">1 votes</span> --}}
                                                 <div class="comment-meta">
-                                                    <div class="date"><i class="icon-time"></i>{{ $answer->created_at->diffForHumans(Carbon\Carbon::now()) }}</div> 
+                                                    <div class="date"><i class="icon-time"></i>{{ Carbon\Carbon::parse($answer->created_at)->diffForHumans() }}</div> 
                                                 </div>
                                                 @if ($question->best_answer_id == $answer->id)
-                                                    <div class="question-answered question-answered-done"><i class="icon-ok"></i>Best Answer</div>
+                                                    <div class="question-answered question-answered-done" id="best-answer">
+                                                        <i id="best-{{ $answer->id }}" class="icon-ok"></i>Best Answer
+                                                    </div>
+                                                @elseif (Auth::id() == $question->user->id)
+                                                    <button id="best-answer-{{ $answer->id }}" class="best-answer">Best Answer</button> 
                                                 @endif
                                             </div>
                                             <div class="text">
-                                                <p>
-                                                    <div class="ckeditor-container">
-                                                        <div id="editor{{ $answer->id }}"></div>
-                                                        <div id="sidebar{{ $answer->id }}" class="ckeditor-sidebar"></div>
-                                                    </div> 
-                                                </p>
+                                                <div class="ckeditor-container">
+                                                    <div id="editor{{ $answer->id }}"></div>
+                                                    <div id="sidebar{{ $answer->id }}" class="ckeditor-sidebar"></div>
+                                                </div> 
+                                                <div style="width: 567px">
+                                                    <br>
+                                                    @if ($answer->images->count()) 
+                                                        <div class="bxslider">
+                                                            @php 
+                                                                $imageAnswerNumber = $answer->images->count()
+                                                            @endphp
+                                                            @foreach ($answer->images as $answerImageKey => $answerImage)
+                                                                <div class="slide">
+                                                                    <div class="grid-bxslider">
+                                                                        <div class="bxslider-overlay t_center">
+                                                                            <a href="#" class="bxslider-title">
+                                                                                <br>
+                                                                                <h4 style="margin-top: -3px">{{ ++$answerImageKey }}/{{ $imageAnswerNumber }}</h4>
+                                                                            </a>
+                                                                            <a href="{{ $answerImage->url }}" class="prettyPhoto" rel="prettyPhoto"><span class="overlay-lightbox overlay-lightbox-for-answer"><i class="icon-search"></i></span></a>
+                                                                        </div>
+                                                                        <div style="width:119.25px; height:74.325px">
+                                                                            <img style="max-width: 100%; max-height: 100%;" src="{{ $answerImage->url }}" alt="">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                    @if ($answer->medias->count())
+                                                        <div>
+                                                            @foreach ($answer->medias as $answerMediaKey => $media)
+                                                                <audio controls controlsList="nodownload" style="width: 240px;">
+                                                                    <source src="{{ $media->url }}" type="audio/ogg">
+                                                                    <source src="{{ $media->url }}" type="audio/mpeg">
+                                                                    Your browser does not support the audio element.
+                                                                </audio>
+                                                                <span>&nbsp;</span>
+                                                            @endforeach
+                                                        </div>
+                                                        <br>
+                                                    @endif
+                                                </div>
                                             </div>
                                             {{-- <i class="vote-answer" l_background="#e74c3c" l_background_hover="#2f3239" class="icon-star ul_l_circle"></i> --}}
                                             {{-- <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>  --}}
@@ -466,41 +548,51 @@ $(document).ready(function() {
                                                 @endif
                                             </a>   
                                             <span class="answer-vote-number" id="answer-{{ $answer->id }}-vote-number">{{ $answer->vote_number }}</span> <b style="font-size: 13px">votes</b> 
+                                            {{-- @if ($question->best_answer_id != $answer->id)
+                                                <button class="best-answer">Edit</button>
+                                            @endif  --}}
                                         </div>
                                     </div>
                                     <ul class="children">
-                                        <li class="comment">
-                                            <div class="comment-body clearfix"> 
-                                                <div class="avatar"><img alt="" src="https://2code.info/demo/html/ask-me/images/demo/avatar.png"></div>
-                                                <div class="comment-text">
-                                                    <div class="author clearfix">
-                                                        <div class="comment-author"><a href="#">vbegy</a></div>
-                                                        <div class="comment-vote">
-                                                            <ul class="question-vote">
-                                                                <li><a href="#" class="question-vote-up" title="Like"></a></li>
-                                                                <li><a href="#" class="question-vote-down" title="Dislike"></a></li>
-                                                            </ul>
+                                        @foreach ($answer->comments as $comment)
+                                            <li class="comment">
+                                                <div class="comment-body clearfix"> 
+                                                    <div class="comment-avatar avatar"><img alt="" src="{{ $comment->user->avatar ?? asset('images/default_avatar.png') }}"></div>
+                                                    <div class="comment-text">
+                                                        <div class="author comment-info clearfix">
+                                                            <div class="comment-author comment-font-size"><a href="#">{{ $comment->user->name }}</a></div>
+                                                            {{-- <div class="comment-vote">
+                                                                <ul class="question-vote">
+                                                                    <li><a href="#" class="question-vote-up" title="Like"></a></li>
+                                                                    <li><a href="#" class="question-vote-down" title="Dislike"></a></li>
+                                                                </ul>
+                                                            </div> --}}
+                                                            {{-- <span class="question-vote-result">+1</span> --}}
+                                                            <div class="comment-meta">
+                                                                <div class="date comment-date"><i class="icon-time"></i>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</div> 
+                                                            </div>
+                                                            {{-- <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>  --}}
                                                         </div>
-                                                        <span class="question-vote-result">+1</span>
-                                                        <div class="comment-meta">
-                                                            <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div> 
+                                                        <div class="text"><div class="comment-content">{{ $comment->comment }}</div>
                                                         </div>
-                                                        <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a> 
-                                                    </div>
-                                                    <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
                                                     </div>
                                                 </div>
+                                            </li>
+                                        @endforeach
+                                        <li class="comment" id="comment-for-answer-{{ $answer->id }}">
+                                            <div class="comment-body clearfix"> 
+                                                <div>
+                                                    <div class="avatar comment-avatar"><img alt="" src="{{ Auth::user()->avatar ?? asset('images/default_avatar.png') }}"></div>
+                                                    <input id="add-comment-answer-{{ $answer->id }}" class="comments" type="text" name="comment" placeholder="Add a comment...">
+                                                </div> 
                                             </div>
-                                            
                                         </li>
-                                    </ul><!-- End children -->
+                                    </ul>
                                 </li>
                                 <script>
-                                    
                                     if (currentUserId != questionUserId && currentUserId != answerUserIds[i]) {
                                         var appData = {
                                             answerId: answerIds[i],
-                                            // Users data.
                                             users: [
                                                 {
                                                     id: 'user-' + questionUserId,
@@ -523,7 +615,7 @@ $(document).ready(function() {
                                         ClassicEditor
                                             .create(document.querySelector('#editor' + answerIds[i]), {
                                                 initialData: appData.initialData,
-                                                licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+                                                licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
                                                 sidebar: {
                                                     container: document.querySelector('#sidebar' + answerIds[i])
                                                 },
@@ -567,7 +659,7 @@ $(document).ready(function() {
                                                 
                                                 initialData: appData.initialData,
                                                 extraPlugins: [new CommentsIntegrationFactory(appData).genCommentsIntegration()],
-                                                licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+                                                licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
                                                 sidebar: {
                                                     container: document.querySelector('#sidebar' + answerIds[i])
                                                 },
@@ -604,7 +696,7 @@ $(document).ready(function() {
                                                             url: 'http://localhost:8000/questions/answer/' + editor.sourceElement.id.substr(6) + '/deleteConversationThread',
                                                             data: {
                                                                 conversation: JSON.stringify(commentThreadsData),
-                                                                answerContent: editorData 
+                                                                answerContent: editorData
                                                             },
                                                             success: function(data){
                                                                 
@@ -613,7 +705,6 @@ $(document).ready(function() {
 
                                                             }
                                                         });
-
                                                         console.log( `The comment thread with ID ${ threadId } has been removed.` );
                                                     }
                                                 } );
@@ -648,7 +739,7 @@ $(document).ready(function() {
                                                 commentsOnly: true,
                                                 initialData: appData.initialData,
                                                 extraPlugins: [new CommentsIntegrationFactory(appData).genCommentsIntegration()],
-                                                licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+                                                licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
                                                 sidebar: {
                                                     container: document.querySelector('#sidebar' + answerIds[i])
                                                 },
@@ -692,16 +783,15 @@ $(document).ready(function() {
                                                             url: 'http://localhost:8000/questions/answer/' + editor.sourceElement.id.substr(6) + '/deleteConversationThread',
                                                             data: {
                                                                 conversation: JSON.stringify(commentThreadsData),
-                                                                answerContent: editorData 
+                                                                answerContent: editorData
                                                             },
                                                             success: function(data){
-                                                                
+                                                                //
                                                             },
                                                             error: function(error){
-
+                                                                //
                                                             }
                                                         });
-
                                                         console.log( `The comment thread with ID ${ threadId } has been removed.` );
                                                     }
                                                 } );
@@ -710,13 +800,9 @@ $(document).ready(function() {
                                     }
                                 </script>
                             @endforeach
-                           
-                            
                         </div>
-
                     </ol>
                     {{ $answers->links() }}   
-
                 </div>
                 <div id="related-posts">
                     <h2>Related questions</h2>
@@ -726,7 +812,7 @@ $(document).ready(function() {
                         <li class="related-item"><h3><a href="#"><i class="icon-double-angle-right"></i>This is my fourth Question</a></h3></li>
                         <li class="related-item"><h3><a href="#"><i class="icon-double-angle-right"></i>This is my fifth Question</a></h3></li>
                     </ul>
-                </div><!-- End related-posts -->
+                </div>
                 <div id="respond" class="comment-respond page-content clearfix">
                     <div class="boxedtitle page-title"><h2>Leave an answer</h2></div>
                     <form action="{{ route('answers.store', $question->id) }}" method="post" id="post-answer" class="comment-form" enctype="multipart/form-data">

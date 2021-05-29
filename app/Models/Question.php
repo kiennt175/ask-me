@@ -11,14 +11,26 @@ use App\Models\Image;
 use App\Models\Content;
 use App\Models\Vote;
 use App\Models\Answer;
+use Elasticquent\ElasticquentTrait;
 
 class Question extends Model
 {
+    use ElasticquentTrait;
+
     protected $fillable = [ 
         'user_id',
         'title',
         'view_number',
-        'best_answer_id' 
+        'best_answer_id',
+        'vote_number',
+        'updated'
+    ];
+
+    protected $mappingProperties = [
+        'title' => [
+            'type' => 'text',
+            "analyzer" => "standard",
+        ],
     ];
 
     public function user()

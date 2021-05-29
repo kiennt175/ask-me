@@ -25,8 +25,8 @@ class PostController extends Controller
             [
                 'title' => ['required', 'string', 'max:255'],
                 'tags' => ['required'],
-                'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
-                'medias.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
+                'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
+                'audios.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
             ]
 	    ); 
         if (!$request->content) {
@@ -36,7 +36,7 @@ class PostController extends Controller
             // save question
             $question = Question::create([
                 'user_id' => Auth::id(),
-                'title' => $request->title
+                'title' => trim($request->title)
             ]);
             // save tags
             $tags = explode(",", $request->tags);
@@ -57,20 +57,22 @@ class PostController extends Controller
                 'updated' => 0
             ]);
             // save images
-            if ($request->images) {
-                foreach ($request->images as $image) {
-                    $imageName = time() . '_' . $image->getClientOriginalName();
-                    $whereToSaveImage = public_path('images/uploads');
-                    $image->move($whereToSaveImage, $imageName);
-                    $url = "http://localhost:8000/images/uploads/$imageName" ;
-                    $question->images()->create([
-                        'url' => $url
-                    ]);
+            if ($request->photos) {
+                foreach ($request->photos as $image) {
+                    if (in_array($image->getClientOriginalName(), array_filter(explode(",", $request->imgUrls)))) {
+                        $imageName = time() . '_' . $image->getClientOriginalName();
+                        $whereToSaveImage = public_path('images/uploads');
+                        $image->move($whereToSaveImage, $imageName);
+                        $url = "http://localhost:8000/images/uploads/$imageName" ;
+                        $question->images()->create([
+                            'url' => $url
+                        ]);
+                    };
                 }
             } 
             // save medias
-            if ($request->medias) {
-                foreach ($request->medias as $media) {
+            if ($request->audios) {
+                foreach ($request->audios as $media) {
                     $mediaName = time() . '_' . $media->getClientOriginalName();
                     $whereToSaveMedia = public_path('medias');
                     $media->move($whereToSaveMedia, $mediaName);
@@ -81,7 +83,7 @@ class PostController extends Controller
                 }
             } 
         });
-
+        
         return response()->json(['response' => 1]);
     }
 

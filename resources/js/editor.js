@@ -2,7 +2,7 @@ window.theEditor;
 ClassicEditor
     .create(document.querySelector('#editor'), {
         initialData: '',
-        licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+        licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
         sidebar: {
             container: document.querySelector('#sidebar')
         },
@@ -25,7 +25,7 @@ ClassicEditor
         }
     })
     .then(editor => {
-        editor.plugins.get('AnnotationsUIs').switchTo('narrowSidebar');
+        // editor.plugins.get('AnnotationsUIs').switchTo('narrowSidebar');
         theEditor = editor;
         editor.editing.view.change(writer => {
             writer.setStyle(

@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css/editor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ipa.css') }}">
     <link rel="stylesheet" href="{{ asset('css/recorder.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/image-uploader/css/font.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/image-uploader/css/image-uploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/audioUploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ask-question.css') }}">
+    <link rel="stylesheet" href="{{ asset('datetimepicker/style.min.css') }}">
     <script>
         if (!document.addEventListener) {
             parent.location.href = 'ie8/type.html';
@@ -160,7 +166,7 @@
 									<label class="required">Body<span>*</span></label>
                                     <div id="container">
                                         <div id="editor"></div>
-                                        <div id="sidebar"></div>
+                                        {{-- <div id="sidebar"></div> --}}
                                     </div>
 								</p>
 							</div>
@@ -168,14 +174,33 @@
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label>Images</label>
-                                    <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple>
+                                    {{-- <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple> --}}
+                                    <div class="input-field">
+                                        <div class="input-images-2" style="padding-top: .5rem;"></div>
+                                    </div>
                                 </p>
                                 <br>
                                 <p>
                                     <label>Audio Files</label>
-                                    <input type="file" name="medias[]" accept="audio/mp3,audio/ogg,audio/wav" multiple>
+                                    {{-- <input type="file" name="medias[]" accept="audio/mp3,audio/ogg,audio/wav" multiple> --}}
+                                    <div class="add-more-media">
+                                        <div class="add-more-media-form">
+                                            <div class="file-uploader__message-area">
+                                                <p>Select a file to upload</p>
+                                            </div>
+                                            <div class="file-chooser"> 
+                                                <input class="file-chooser__input" type="file" accept="audio/mp3,audio/ogg,audio/wav">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </p>
                             </div>
+                            <br>
+                            <div style="display: flex">
+                                <label class="schedule-label">Schedule</label>
+                                <input name="datetime" type="text" id="datetime-picker" placeholder="Select Date...">
+                            </div>
+                            <br><br>
 							<p class="form-submit">
 								<input type="submit" id="publish-question" value="Publish Your Question" class="button color small submit">
 							</p>
@@ -269,6 +294,20 @@
         </div>
     </section>
     <script src="{{ asset('js/editor.js') }}"></script>
+    <script>
+        $('.input-images-2').imageUploader({
+            preloaded: [],
+            imagesInputName: 'photos',
+            preloadedInputName: 'oldImageIds'
+        });
+    </script>
+    <script>
+        $("#datetime-picker").flatpickr({
+            enableTime: true,
+            minDate: 'today',
+            maxDate: new Date().fp_incr(7) 
+        });
+    </script>
 @endsection
 
 @section('scripts')
@@ -280,4 +319,7 @@
     <script src="{{ asset('js/recorder.js') }}"></script>
     <script src="{{ asset('js/postQuestion.js') }}"></script>
     <script src="{{ asset('js/askQuestionPage.js') }}"></script>
+    <script src="{{ asset('js/audioUploader.js') }}"></script>
+    <script src="{{ asset('bower_components/image-uploader/js/image-uploader.js') }}"></script>
+    <script src="{{ asset('datetimepicker/script.min.js') }}"></script>
 @endsection

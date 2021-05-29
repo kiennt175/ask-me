@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -49939,134 +49939,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/avatar.scss":
-/*!************************************!*\
-  !*** ./resources/sass/avatar.scss ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/editor.scss":
-/*!************************************!*\
-  !*** ./resources/sass/editor.scss ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/index.scss":
+/***/ 1:
 /*!***********************************!*\
-  !*** ./resources/sass/index.scss ***!
+  !*** multi ./resources/js/app.js ***!
   \***********************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/ipa.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/ipa.scss ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/login.scss":
-/*!***********************************!*\
-  !*** ./resources/sass/login.scss ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/newsfeedPage.scss":
-/*!******************************************!*\
-  !*** ./resources/sass/newsfeedPage.scss ***!
-  \******************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/questionDetailsPage.scss":
-/*!*************************************************!*\
-  !*** ./resources/sass/questionDetailsPage.scss ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/recorder.scss":
-/*!**************************************!*\
-  !*** ./resources/sass/recorder.scss ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/register.scss":
-/*!**************************************!*\
-  !*** ./resources/sass/register.scss ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/sass/user-profile.scss":
-/*!******************************************!*\
-  !*** ./resources/sass/user-profile.scss ***!
-  \******************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 0:
-/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/avatar.scss ./resources/sass/editor.scss ./resources/sass/index.scss ./resources/sass/ipa.scss ./resources/sass/login.scss ./resources/sass/newsfeedPage.scss ./resources/sass/questionDetailsPage.scss ./resources/sass/recorder.scss ./resources/sass/register.scss ./resources/sass/user-profile.scss ***!
-  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/js/app.js */"./resources/js/app.js");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/avatar.scss */"./resources/sass/avatar.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/editor.scss */"./resources/sass/editor.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/index.scss */"./resources/sass/index.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/ipa.scss */"./resources/sass/ipa.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/login.scss */"./resources/sass/login.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/newsfeedPage.scss */"./resources/sass/newsfeedPage.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/questionDetailsPage.scss */"./resources/sass/questionDetailsPage.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/recorder.scss */"./resources/sass/recorder.scss");
-__webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/register.scss */"./resources/sass/register.scss");
-module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/sass/user-profile.scss */"./resources/sass/user-profile.scss");
+module.exports = __webpack_require__(/*! /Users/kiennt175/OneDrive - Hanoi University of Science and Technology/ask-me/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

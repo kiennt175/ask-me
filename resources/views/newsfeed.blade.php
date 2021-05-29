@@ -1,8 +1,22 @@
 @extends('layouts.master')
 
+@section('title')
+	<title>Newsfeed</title>
+@endsection
+
 @section('style')
 	@parent
 	<link rel="stylesheet" href="{{ asset('css/newsfeedPage.css') }}">
+	<link rel="stylesheet" href="{{ asset('bower_components/cute-alert/style.css') }}">
+@endsection
+
+@section('scripts')
+	@parent
+    <script src="{{ asset('js/newsfeedPage.js') }}"></script>
+	{{-- <script src="{{ asset('bower_components/jscroll/jquery.jscroll.js') }}"></script> --}}
+	{{-- <script src="{{ asset('js/jscroll.js') }}"></script> --}}
+	<script src="{{ asset('bower_components/cute-alert/cute-alert.js') }}"></script>
+	<script src="{{ asset('js/deleteQuestion.js') }}"></script>
 @endsection
 
 @section('content')
@@ -10,7 +24,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>My Newsfeed</h1>
+                    <h1>Newsfeed</h1>
                 </div>
             </div>
         </section>
@@ -19,16 +33,19 @@
 		<div class="row">
 			<div class="col-md-9">
 				<div class="infinite-scroll">
+					{{ $questions->links() }}
 					@foreach ($questions as $question)
+						<script>
+							var buttonNumber = '{{ $questions->count() }}'
+						</script>
 						<article class="question question-type-normal">
-							<h2>
+							<h2 class="question-title">
 								<a href="{{ route('questions.show', $question->id) }}">{{ $question->title }}</a>
 							</h2>
-							@guest
-								<a class="question-report" href="#">Report</a>
-							@endguest
+							<i class="icon-remove remove-question-button" id="delete-question-{{ $question->id }}"></i>
+							{{-- <a class="question-report" href="#">Report</a> --}}
 							<div class="question-author">
-								<a href="javascript:void(0)" original-title="ahmed" class=""><span></span><img alt="" src="{{ $user->avatar }}"></a>
+								<a href="{{ route('user.show', $user->id) }}" original-title="ahmed" class=""><span></span><img alt="" src="{{ $user->avatar }}"></a>
 							</div>
 							<div class="question-inner">
 								<div class="clearfix"></div>
@@ -194,9 +211,3 @@
 	</section>
 @endsection
 
-@section('scripts')
-	@parent
-    <script src="{{ asset('js/newsfeedPage.js') }}"></script>
-	<script src="{{ asset('bower_components/jscroll/jquery.jscroll.js') }}"></script>
-	<script src="{{ asset('js/jscroll.js') }}"></script>
-@endsection

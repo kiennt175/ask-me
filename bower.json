@@ -16,6 +16,12 @@
     "login-signup-form-style": "git@github.com:kiennt175/login-signup-form-style.git",
     "tata-js": "git@github.com:kiennt175/tata-js.git",
     "forgot-password-mail": "git@github.com:kiennt175/forgot-password-mail.git",
-    "jscroll": "git@github.com:kiennt175/jscroll.git"
+    "jscroll": "git@github.com:kiennt175/jscroll.git",
+    "cute-alert": "git@github.com:gustavosmanc/cute-alert.git",
+    "jBox": "git@github.com:StephanWagner/jBox.git#^1.3.2",
+    "modal": "^1.1.9",
+    "image-uploader": "git@github.com:kiennt175/image-uploader.git",
+    "eonasdan-bootstrap-datetimepicker": "git@github.com:kiennt175/datetime-picker.git",
+    "flatpickr": "git@github.com:flatpickr/flatpickr.git#^4.6.9"
   }
 }

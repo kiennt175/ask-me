@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head class="head">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/css/skins/blue.css') }}">
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+        {{-- <link rel="stylesheet" href="{{ asset('bower_components/jBox/dist/jBox.all.min.css') }}"> --}}
     @show
     
     @section('scripts')
@@ -27,7 +28,7 @@
         <script src="{{ asset('bower_components/askme-style/js/jquery.tipsy.js') }}"></script>
         <script src="{{ asset('bower_components/askme-style/js/tabs.js') }}"></script>
         <script src="{{ asset('bower_components/askme-style/js/jquery.flexslider.js') }}"></script>
-        <script src="{{ asset('bower_components/askme-style/js/jquery.prettyPhoto.js') }}"></script>
+        <script src="{{ asset('bower_components/askme-style/js/jquery.prettyPhoto.js') }}"></script>  
         <script src="{{ asset('bower_components/askme-style/js/jquery.carouFredSel-6.2.1-packed.js') }}"></script>
         <script src="{{ asset('bower_components/askme-style/js/jquery.scrollTo.js') }}"></script>
         <script src="{{ asset('bower_components/askme-style/js/jquery.nav.js') }}"></script>
@@ -36,6 +37,8 @@
         <script src="{{ asset('bower_components/askme-style/js/custom.js') }}"></script>
         <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
         <script src="{{ asset('ckeditor5-comment/build/ckeditor.js') }}"></script>
+        <script src="{{ asset('js/search.js') }}"></script>
+        {{-- <script src="{{ asset('bower_components/jBox/dist/jBox.all.min.js') }}"></script> --}}
     @show
 </head>
 <body>
@@ -74,7 +77,7 @@
                             @endguest
                         </li>
                         <li>
-                            <input class="search-input" type="text" placeholder="Search here...">
+                            <input name="search" id="search" class="search-input" type="text" placeholder="Search here...">
                         </li>
                     </ul>
                 </nav>

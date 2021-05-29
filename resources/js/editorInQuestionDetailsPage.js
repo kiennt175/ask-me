@@ -3,7 +3,7 @@ window.theEditor;
 ClassicEditor
     .create(document.querySelector('#editor'), {
         initialData: content,
-        licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+        licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
         link: {
             addTargetToExternalLinks: true
         }
@@ -57,7 +57,7 @@ ClassicEditor
     .create(document.querySelector('#answer-editor'), {
         initialData: '',
         extraPlugins: [CommentsAdapterForReply],
-        licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+        licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
         sidebar: {
             container: document.querySelector('#answer-sidebar')
         },

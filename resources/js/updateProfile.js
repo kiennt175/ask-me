@@ -18,6 +18,7 @@ $(document).ready(function(){
             success: function(data){
                 $('#website-link').val(data.website_link);
                 $(".name").html(data.name);
+                $("#username").val(data.username);
                 tata.success('Profile', 'Update profile successfully!', {
                     duration: 5000,
                     animate: 'slide'

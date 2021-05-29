@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -114,6 +114,7 @@ $(document).ready(function () {
       success: function success(data) {
         $('#website-link').val(data.website_link);
         $(".name").html(data.name);
+        $("#username").val(data.username);
         tata.success('Profile', 'Update profile successfully!', {
           duration: 5000,
           animate: 'slide'
@@ -131,14 +132,14 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 14:
+/***/ 21:
 /*!*********************************************!*\
   !*** multi ./resources/js/updateProfile.js ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/js/updateProfile.js */"./resources/js/updateProfile.js");
+module.exports = __webpack_require__(/*! /Users/kiennt175/OneDrive - Hanoi University of Science and Technology/ask-me/resources/js/updateProfile.js */"./resources/js/updateProfile.js");
 
 
 /***/ })

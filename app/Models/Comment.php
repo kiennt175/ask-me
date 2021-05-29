@@ -9,6 +9,13 @@ use App\Models\Question;
 
 class Comment extends Model
 {
+    protected $fillable = [ 
+        'answer_id',
+        'user_id',
+        'comment',
+        'updated'
+    ];
+
     public function answer()
     {
         return $this->belongsTo(Answer::class);

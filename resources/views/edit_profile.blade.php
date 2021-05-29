@@ -58,6 +58,19 @@
                                     <label>Website Link</label>
                                     <input type="text" name="website_link" id="website-link" value="{{ $user->website_link }}">
                                 </p>
+                                @if (Auth::user()->username)
+                                    <p>
+                                        <label for="">Username</label>
+                                        <input type="text" name="username" value="{{ Auth::user()->username }}" disabled>
+                                    </p>
+                                @else 
+                                    <p>
+                                        <label for="">Username</label>
+                                        <input id="username" type="text" name="username">
+                                        <small style="color: #3498db"><i><b>Username can only be set up once!</b></i></small>
+                                    </p>
+                                @endif
+                                <p></p>
                             </div>
                             <p class="form-submit">
                                 <input type="submit" value="Update Profile" class="button color small login-submit submit">
@@ -205,7 +218,7 @@
                     </ul>
                 </div>
             </aside>
-            <div class="col-md-9" style="margin-top: 30px">
+            <div class="col-md-9">
                 <div class="page-content">
                     <div class="boxedtitle page-title">
                         <h2>Change Password</h2>

@@ -28,19 +28,60 @@ $(document).ready(function(){
                     });
                 }
                 if (data.response == 1) {
-                    $('.commentlist').prepend(
-                        `<li class="comment" id="new-answer"><div class="comment-body comment-body-answered clearfix"><div class="avatar"><img alt="" src=" ${data.answerUserAvatar || 'http://localhost:8000/images/default_avatar.png'}`
+                    // images block
+                    var imageBlock = ``;
+                    if (data.imageURLs != '[]') {
+                        imageBlock += `<div class="bxslider" sty>`;
+                        for (let i = 0; i < data.imageURLs.length; i++) {
+                            imageBlock += `<div class="slide"><div class="grid-bxslider"><div class="bxslider-overlay t_center"><a href="#" class="bxslider-title"><br><h4 style="margin-top: -3px">`
+                                + (i + 1) 
+                                + `/`
+                                + data.imageURLs.length
+                                + `</h4></a><a href="`
+                                + data.imageURLs[i]
+                                + `" class="prettyPhoto" rel="prettyPhoto"><span class="overlay-lightbox overlay-lightbox-for-answer"><i class="icon-search"></i></span></a></div><div style="width:119.25px; height:74.325px"><img style="max-width: 100%; max-height: 100%;" src="`
+                                + data.imageURLs[i]
+                                + `" alt=""></div></div></div>`
+                            ;
+                        }
+                        imageBlock += `</div>`;
+                    }
+                    console.log(imageBlock)   
+
+                    // medias block
+                    var mediaBlock = ``;
+                    if (data.imageURLs != '[]') {
+                        mediaBlock += `<div>`;
+                        for (let i = 0; i < data.mediaURLs.length; i++) {
+                            mediaBlock += `<audio controls controlsList="nodownload" style="width: 240px;"><source src="`
+                                + data.mediaURLs[i]
+                                + `" type="audio/ogg"><source src="`
+                                + data.mediaURLs[i]
+                                + `" type="audio/mpeg">Your browser does not support the audio element.</audio><span>&nbsp;</span>`
+                            ;
+                        }
+                        mediaBlock += `</div><br>`;
+                    }
+                    console.log(mediaBlock)   
+
+                    $('.infinite-scroll').prepend(
+                        `<script src="http://localhost:8000/bower_components/askme-style/js/custom.js"></script>`
+                        + `<li class="comment" id="new-answer"><div class="comment-body comment-body-answered clearfix"><div class="avatar"><img alt="" src=" ${data.answerUserAvatar || 'http://localhost:8000/images/default_avatar.png'}`
                         + `"></div><div class="comment-text"><div class="author clearfix"><div class="comment-author"><a href="#">`
                         + data.answerUserName
                         + `</a></div><div class="comment-meta"><div class="date"><i class="icon-time"></i>`
                         + data.time
-                        + `</div></div></div><div class="text"><p>`
+                        + `</div></div></div><div class="text">`
                         + `<div class="ckeditor-container"><div id="editor`
                         + data.keyCkeditor
                         + `"></div><div id="sidebar`
                         + data.keyCkeditor
                         + `" class="ckeditor-sidebar"></div></div>`
-                        + `</p></div><a id="new-answer-vote" class="vote-answer" href="http://localhost:8000/questions/voteAnswer/`
+                        + `<div style="width: 567px"><br>`
+                        + imageBlock
+                        + mediaBlock
+                        + `</div>`
+                        + `</div><a id="new-answer-vote" class="vote-answer" href="http://localhost:8000/questions/voteAnswer/`
                         + data.newAnswerId
                         + `"><i class="icon-heart heart-icon-answer-unvote" id="vote-answer-`
                         + data.newAnswerId
@@ -48,6 +89,7 @@ $(document).ready(function(){
                         + data.newAnswerId
                         + `-vote-number">0</span> <b style="font-size: 13px">votes</b></div></div><ul class="children"></ul></li>`
                     )
+                    console.log(data.imagesCount, data.mediasCount);
                     class CommentsIntegrationFactory {
                         constructor(appData) {
                             this.appData = appData
@@ -178,9 +220,8 @@ $(document).ready(function(){
                     }
                     ClassicEditor
                         .create(document.querySelector('#editor' + data.keyCkeditor), {
-                            
                             initialData: appData.initialData,
-                            licenseKey: 'B5LjLiy+0DKNCFPpGIMCS96MG7XUbzVvzrkMI717WpihLPiGZVTA4Nf3',
+                            licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
                             extraPlugins: [new CommentsIntegrationFactory(appData).genCommentsIntegration()],
                             sidebar: {
                                 container: document.querySelector('#sidebar' + data.keyCkeditor)
@@ -212,7 +253,7 @@ $(document).ready(function(){
                                         url: 'http://localhost:8000/questions/answer/' + appData.answerId + '/deleteConversationThread',
                                         data: {
                                             conversation: JSON.stringify(commentThreadsData),
-                                            answerContent: editorData 
+                                            answerContent: editorData
                                         },
                                         success: function(data){
                                             
@@ -265,11 +306,8 @@ $(document).ready(function(){
                             });
                         });
                     });
-
                     document.getElementById("tab-top").scrollIntoView()
-                    
                 }
-
             },
             error: function(error){
                 tata.error('Post Answer', 'Something wrong. Please try again!', {

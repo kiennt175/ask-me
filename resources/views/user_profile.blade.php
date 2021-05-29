@@ -45,7 +45,7 @@
 									<h2>User Stats</h2>
 									<div class="ul_list ul_list-icon-ok">
 										<ul>
-											<li><i class="icon-question-sign"></i><a href="user_questions.html">Questions<span> ( <span>30</span> ) </span></a></li>
+											<li><i class="icon-question-sign"></i><a href="{{ route('user.newsfeedBy', $user->id) }}">Questions<span> ( <span>30</span> ) </span></a></li>
 											<li><i class="icon-comment"></i><a href="user_answers.html">Answers<span> ( <span>10</span> ) </span></a></li>
 											<li><i class="icon-star"></i><a href="user_favorite_questions.html">Favorite Questions<span> ( <span>3</span> ) </span></a></li>
 											<li><i class="icon-heart"></i><a href="user_points.html">Points<span> ( <span>20</span> ) </span></a></li>

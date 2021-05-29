@@ -10,3 +10,24 @@
     background-color: #d1e5f1; 
     border-color: transparent;
 }
+.remove-question-button {
+    font-size: 20px;
+    padding: 4px 10px;
+    position: absolute;
+    top: 24px;
+    right: 20px;
+    color: red;
+    cursor: pointer;
+}
+.question-title {
+    width: 800px;
+    overflow-wrap: break-word; 
+}
+.question-desc {
+    width: 630px;
+    overflow-wrap: break-word;
+}
+.pagination {
+    float: inherit;
+    margin-bottom: 30px;
+}

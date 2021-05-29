@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -16,6 +17,13 @@ class UserController extends Controller
     {
         $user = User::find($userId);
         
+        return view('user_profile', compact('user'));
+    }
+
+    public function showBy($username)
+    {
+        $user = User::where('username', $username)->first();
+
         return view('user_profile', compact('user'));
     }
 
@@ -31,6 +39,9 @@ class UserController extends Controller
         $this->validate($request, 
             [
                 'name' => ['required', 'string', 'max:255']
+            ],			
+            [
+                'username' => ['string', 'max:255']
             ],			
             [
                 'name.required' => 'You have to fill out this field!',
@@ -58,6 +69,13 @@ class UserController extends Controller
             'name' => $request->name,
             'website_link' => $request->website_link
         ]);
+        if (!$user->username) {
+            $user->update([
+                'username' => $request->username
+            ]);
+
+            return response()->json(['website_link' => $request->website_link, 'name' => $request->name, 'username' => $request->username]);
+        }
 
         return response()->json(['website_link' => $request->website_link, 'name' => $request->name]);
     }
@@ -124,5 +142,13 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('login')->with('new-password', true);
+    }
+
+    public function newsfeed($id)
+    {
+        $user = User::find($id);
+        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('newsfeed', compact(['questions', 'user']));
     }
 }

@@ -29,7 +29,9 @@ class AnswerController extends Controller
         } 
         $user = Auth::user();
         $answer = null;
-        DB::transaction(function () use ($request, $questionId, &$answer, $user) {
+        $imageURLs = [];
+        $mediaURLs = [];
+        DB::transaction(function () use ($request, $questionId, &$answer, $user, &$imageURLs, &$mediaURLs) {
             // save answer
             $answer = Answer::create([
                 'user_id' => $user->id,
@@ -54,6 +56,7 @@ class AnswerController extends Controller
                     $answer->images()->create([
                         'url' => $url
                     ]);
+                    array_push($imageURLs, $url);
                 }
             } 
             // save medias
@@ -66,6 +69,7 @@ class AnswerController extends Controller
                     $answer->medias()->create([
                         'url' => $url
                     ]);
+                    array_push($mediaURLs, $url);
                 }
             } 
         });
@@ -80,6 +84,8 @@ class AnswerController extends Controller
             'answerContent' => $answer->content->content,
             'time' => $answer->created_at->diffForHumans(Carbon::now()),
             'keyCkeditor' => $answer->id,
+            'imageURLs' => $imageURLs,
+            'mediaURLs' => $mediaURLs
         ];
     
         return response()->json($responseData);

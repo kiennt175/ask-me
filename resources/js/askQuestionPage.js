@@ -4,4 +4,7 @@ $(document).ready(function(){
         item.classList.remove("current_page_item");
     });
     document.getElementById("ask_question").classList.add('current_page_item');
+
+    //
+    $('input[name="photos[]"]').attr("accept", "image/x-png,image/gif,image/jpeg,image/jpg")
 });
