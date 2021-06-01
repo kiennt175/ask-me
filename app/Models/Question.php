@@ -10,15 +10,38 @@ use App\Models\Media;
 use App\Models\Image;
 use App\Models\Content;
 use App\Models\Vote;
+use App\Models\Answer;
+use Elasticquent\ElasticquentTrait;
 
 class Question extends Model
 {
+    use ElasticquentTrait;
+
     protected $fillable = [ 
         'user_id',
         'title',
         'view_number',
-        'best_answer_id' 
+        'best_answer_id',
+        'vote_number',
+        'updated',
+        'schedule_time',
+        'status'
     ];
+
+    protected $mappingProperties = [
+        'title' => [
+            'type' => 'text',
+            "analyzer" => "classic",
+        ],
+    ];
+
+    function getIndexName() {
+        return 'forum';
+    } 
+
+    function getTypeName() {
+        return 'question';
+    }
 
     public function user()
     {
@@ -53,5 +76,10 @@ class Question extends Model
     public function votes()
     {
         return $this->morphMany(Vote::class, 'voteable');
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

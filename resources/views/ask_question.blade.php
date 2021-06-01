@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css/editor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ipa.css') }}">
     <link rel="stylesheet" href="{{ asset('css/recorder.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/image-uploader/css/font.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/image-uploader/css/image-uploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/audioUploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ask-question.css') }}">
+    <link rel="stylesheet" href="{{ asset('datetimepicker/style.min.css') }}">
     <script>
         if (!document.addEventListener) {
             parent.location.href = 'ie8/type.html';
@@ -137,13 +143,17 @@
     </div>
     <section class="container main-content">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="page-content ask-question">
                     <div class="boxedtitle page-title"><h2>Ask A Public Question</h2></div>
                     <div class="form-style form-style-3" id="question-submit">
                         <form action="{{ route('user.postQuestion') }}" method="post" id="post-question" enctype="multipart/form-data">
                             @csrf
 							<div class="form-inputs clearfix">
+                                <div class="schedule-block">
+                                    <label class="schedule-label">Schedule</label>
+                                    <input name="datetime" type="text" id="datetime-picker" placeholder="You can select datetime here to post this question...">
+                                </div>
 								<p>
 									<label class="required">Question Title<span>*</span></label>
 									<input type="text" id="question-title" name="title" required>
@@ -160,7 +170,7 @@
 									<label class="required">Body<span>*</span></label>
                                     <div id="container">
                                         <div id="editor"></div>
-                                        <div id="sidebar"></div>
+                                        {{-- <div id="sidebar"></div> --}}
                                     </div>
 								</p>
 							</div>
@@ -168,12 +178,25 @@
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label>Images</label>
-                                    <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple>
+                                    {{-- <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple> --}}
+                                    <div class="input-field">
+                                        <div class="input-images-2" style="padding-top: .5rem;"></div>
+                                    </div>
                                 </p>
                                 <br>
                                 <p>
                                     <label>Audio Files</label>
-                                    <input type="file" name="medias[]" accept="audio/mp3,audio/ogg,audio/wav" multiple>
+                                    {{-- <input type="file" name="medias[]" accept="audio/mp3,audio/ogg,audio/wav" multiple> --}}
+                                    <div class="add-more-media">
+                                        <div class="add-more-media-form">
+                                            <div class="file-uploader__message-area">
+                                                <p>Select a file to upload</p>
+                                            </div>
+                                            <div class="file-chooser"> 
+                                                <input class="file-chooser__input" type="file" accept="audio/mp3,audio/ogg,audio/wav">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </p>
                             </div>
 							<p class="form-submit">
@@ -183,7 +206,7 @@
                     </div>
                 </div>
             </div>
-            <aside class="col-md-5 sidebar">
+            <aside class="col-md-4 sidebar">
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
@@ -268,6 +291,21 @@
             </aside>
         </div>
     </section>
+    <script src="{{ asset('js/editor.js') }}"></script>
+    <script>
+        $('.input-images-2').imageUploader({
+            preloaded: [],
+            imagesInputName: 'photos',
+            preloadedInputName: 'oldImageIds'
+        });
+    </script>
+    <script>
+        $("#datetime-picker").flatpickr({
+            enableTime: true,
+            minDate: 'today',
+            maxDate: new Date().fp_incr(7) 
+        });
+    </script>
 @endsection
 
 @section('scripts')
@@ -276,7 +314,10 @@
         var avatarURL = "{{ $avatar }}";
         avatarURL = avatarURL.replace('amp;', '');
     </script>
-    <script src="{{ asset('js/editor.js') }}"></script>
     <script src="{{ asset('js/recorder.js') }}"></script>
     <script src="{{ asset('js/postQuestion.js') }}"></script>
+    <script src="{{ asset('js/askQuestionPage.js') }}"></script>
+    <script src="{{ asset('js/audioUploader.js') }}"></script>
+    <script src="{{ asset('bower_components/image-uploader/js/image-uploader.js') }}"></script>
+    <script src="{{ asset('datetimepicker/script.min.js') }}"></script>
 @endsection

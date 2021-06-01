@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Provider;
 use App\Models\Role;
 use App\Models\Question;
@@ -15,6 +16,7 @@ use App\Models\Answer;
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,7 +32,8 @@ class User extends Authenticatable
         'website_link', 
         'points', 
         'reset_password_token',
-        'username'
+        'username',
+        'deleted_at'
     ];
 
     /**

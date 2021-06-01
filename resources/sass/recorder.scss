@@ -14,19 +14,24 @@
     font-weight: bold;
     height: 30px;
     font-family: "Open Sans", Arial, sans-serif;
-    margin: 36px 117px;
+    margin: 36px 67px;
+    width: 181px;
 }
 #start, #stop {
     font-weight: bold;
     font-family: "Open Sans", Arial, sans-serif;
 }
+#start {
+    margin-left: -33px;
+}
 #stop {
-    margin-left: 34px;
+    margin-left: 45px;
 }
 #record {
     display: flex;
     margin-bottom: -20px;
 }
 #save {
-    margin-top: 20px
+    margin-top: 20px;
+    margin-left: 10px;
 }

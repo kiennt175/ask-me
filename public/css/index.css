@@ -3,12 +3,42 @@
 }
 
 .search-input {
-  width: 322px !important;
+  width: 381px !important;
 }
 
 input[type=text],
 input[type=password],
 textarea#bio {
   color: inherit !important;
+}
+
+.question,
+.widget,
+.page-content {
+  border-radius: 5px;
+}
+
+.page-content {
+  margin-bottom: 30px;
+}
+
+.widget:last-child {
+  margin-bottom: 30px;
+}
+
+.error_404 {
+  margin-bottom: 76px;
+}
+
+li.active .page-link {
+  background-color: #3498db;
+  color: #fff;
+}
+
+#question-search {
+  width: 847px;
+  margin-top: 1px;
+  background-color: white;
+  border-color: #3598DB;
 }
 

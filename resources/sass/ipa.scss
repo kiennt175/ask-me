@@ -31,17 +31,17 @@ input.vowel, input.dipth, input.stress {
     margin: 2px 0px;
 }
 input.vowel {
-    width: 1.5rem;/*24px*/
+    width: 32px;
 }
 input.dipth {
-    width: 2.08rem; /*33pt;*/
+    width: 44px;
 }
 input.stress {
-    width: 0.93rem; /*15pt;*/
+    width: 20px;
 }
 input.buact {
     color: #000;
-    width: 102px;
+    width: 91px;
     padding: 0px;
     margin: 0px;
     /*background-color: #fff;*/
@@ -51,7 +51,7 @@ input.resvew {
     font-weight: normal;
     font-size: 0.65rem; 
     margin-bottom: 1rem;
-    border-radius: .5rem;
+    border-radius: 20px;
     border: 1px solid #c4c4c4;
     width: 17.5rem;
     /*background-color:#fdd;*/
