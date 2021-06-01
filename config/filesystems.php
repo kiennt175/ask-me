@@ -65,6 +65,13 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'admin' => [ 
+            'driver' => 'local', 
+            'root' => public_path('images/admin-uploads'), // for save
+            'url' => env('APP_URL').':8000/images/admin-uploads', // for display
+
+        ]
+
     ],
 
     /*

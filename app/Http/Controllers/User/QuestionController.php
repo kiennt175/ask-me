@@ -358,4 +358,68 @@ class QuestionController extends Controller
 
         return response()->json(['response' => 1, 'questionId' => $questionId]);
     }
+
+    public function view()
+    {
+        $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('id')->get();
+        
+        return view('questions', compact('questions'));
+    }
+
+    public function viewByTab($searchText, $tab)
+    {
+
+
+        if ($searchText == 'noSearching') {
+            if ($tab == 'unanswered') {
+                $questions = Question::with(['content', 'user', 'answers'])->where('best_answer_id', null)->orderByDesc('id')->get();
+            } 
+            if ($tab == 'votes') {
+                $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('vote_number')->get();
+            }
+            if ($tab == 'newest') {
+                $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('id')->get();
+            }
+
+            return view('questions', compact('questions', 'tab'));
+        } else {
+            
+
+            if ($tab == 'unanswered') {
+                $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->where('best_answer_id', null)->orderByDesc('id')->get();
+            } 
+            if ($tab == 'votes') {
+                $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('vote_number')->get();
+            }
+            if ($tab == 'newest') {
+                $results = Question::complexSearch([
+                    'body' => [
+                        'query' => [
+                            'multi_match' => [
+                                'query' => $searchText,
+                                'fields' => ['title'],
+                                'fuzziness' => 'AUTO'
+                            ]
+                        ]
+                    ]
+                ])->getHits()['hits'];
+    
+                $ids = array_map(function($item){
+                    return (int) $item['_id'];
+                }, $results);
+    
+                $questions = Question::whereIn('id', $ids)->get();
+                //$questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('id')->get();
+            }
+
+            return view('questions', compact('questions', 'tab', 'searchText'));
+        }
+    }
+
+    // public function search($searchText)
+    // {
+    //     $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('id')->get();
+
+    //     return response()->json(['response' => 1, 'questions' => $questions, 'searchText' => $searText]);
+    // }
 }

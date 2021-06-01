@@ -32,4 +32,22 @@ $(document).ready(function(){
             }
         })
     });
+
+    // copy question content
+    $('.copy-question-content').on('click', function () {
+        const editorContainer = document.getElementById('editor').nextSibling.lastChild.lastChild;
+        const answerContainer = document.getElementById('answer-editor').nextSibling.lastChild.lastChild;
+        const editorData = Array.from(editorContainer.childNodes);
+        editorData.forEach(data => {
+            const clone = data.cloneNode(true)
+            answerContainer.appendChild(clone)
+        });
+
+        // document.execCommand('copy');
+        
+        // answerEditor.model.change( writer => {
+        //     const insertPosition = answerEditor.model.document.selection.getFirstPosition();
+        //     writer.insertText(content, { bold: true }, insertPosition);
+        // } );
+    });
 });

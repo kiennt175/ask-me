@@ -147,8 +147,8 @@ class UserController extends Controller
     public function newsfeed($id)
     {
         $user = User::find($id);
-        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
-
+        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->where('status', 1)->orderBy('created_at', 'desc')->paginate(10);
+        
         return view('newsfeed', compact(['questions', 'user']));
     }
 }

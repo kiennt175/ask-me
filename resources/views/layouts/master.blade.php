@@ -45,7 +45,7 @@
     <div class="loader">
         <div class="loader_html"></div>
     </div>
-    <div id="wrap" class="grid_1200">
+    {{-- <div id="wrap" class="grid_1200"> --}}
         <header id="header">
             <section class="container clearfix">
                 <div class="logo"><a href="{{ route('home') }}"><img alt="" src="{{ asset('bower_components/askme-style/images/logo.png') }}"></a></div>
@@ -53,7 +53,7 @@
                     <ul>
                         <li id="explore" class="current_page_item"><a href="javascript:void(0)">Explore</a>
                             <ul>
-                                <li id="questions" class="current_page_item"><a href="">Questions</a></li>
+                                <li id="questions" class="current_page_item"><a href="{{ route('questions.view') }}">Questions</a></li>
                                 <li><a href="">Tags</a></li>
                                 <li><a href="">Users</a></li>
                             </ul>
@@ -68,6 +68,7 @@
                                 </a>
                                 <ul>
                                     <li class="newsfeed"><a href="{{ route('user.newsfeed') }}">My Newsfeed</a></li>
+                                    <li><a href="{{ route('user.pending') }}">My Pending Question</a></li>
                                     <li><a href="{{ route('user.show', Auth::id()) }}">My Profile</a></li>
                                     <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a></li>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -86,6 +87,7 @@
 
         @yield('content')
         
+        <div class="clearfix"></div>
         <footer id="footer">
             <section class="container">
                 <div class="copyrights f_left">&copy; 2021 ASK me</div>
@@ -102,7 +104,7 @@
                 </div>
             </section>
         </footer>
-    </div>
+    {{-- </div> --}}
     <div class="go-up">
         <i class="icon-chevron-up"></i>
     </div>

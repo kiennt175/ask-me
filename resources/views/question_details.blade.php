@@ -175,8 +175,8 @@
             </div>
         </section>
     </div>
-    <section class="container main-content">
-        <div class="row">
+    {{-- <section class="container main-content"> --}}
+        {{-- <div class="row"> --}}
             <div class="col-md-8">
                 <div class="about-author clearfix">
                     <div class="author-image">
@@ -823,6 +823,8 @@
                                 <div class="ckeditor-container">
                                     <div id="answer-editor"></div>
                                     <div id="answer-sidebar" class="ckeditor-sidebar"></div>
+                                    <span class="copy-question-content"><i class="icon-copy"></i></span>
+                                    {{-- <span><button>Paste Question Content</button></span> --}}
                                 </div> 
                             </p>
                             <br>
@@ -850,91 +852,93 @@
                     </form>
                 </div>
             </div>
-            <aside class="col-md-4 sidebar">
-                <div class="widget">
-                    <h3 class="widget_title">IPA Tool</h3>
-                    <form method="post" enctype="application/x-www-form-urlencoded" action="#">
-                        <input type="text" name="resultview" class="resvew" style="font-size: 16px">
-                        <div id="formcontent">
-                            <input type="text" id="result" class="res"/>
-                            <input type="text" id="resultweb" class="res"/>
-                        </div>
-                        <div class="typewriter">
-                            <script type="text/javascript">
-                                for(j = 0, z = 1; j < 1; j++, z = z + 10) {
-                                    for (i = 1, k = z; i < 5; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    for (i = 5; i < 7; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"dipth\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    for (i = 7; i < 9; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"stress\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    document.write('<br/>');
-                                }
-                                for (j = 1, z = 11; j < 3; j++, z = z + 10) {
-                                    for (i = 1, k = z; i < 5; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    for (i = 5; i < 8; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"dipth\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    document.write('<br/>');
-                                }
-                                for (j = 3, z = 31; j < 6; j++, z = z + 10) {
-                                    for (i = 1, k = z; i < 9; i++, k++) {
-                                        p = k % 10;
-                                        document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
-                                    }
-                                    document.write('<br/>');
-                                }
-                            </script>
-                            <br/>
-                            <input type="button" onclick="clearOne();" class="buact" value="Delete"/>
-                            <input type="button" onclick="addSpace();" class="buact" value="Space"/>
-                            <input type="button" onclick="clearAll();;" class="buact" value="Reset"/>
-                            <br/><br/>
-                        </div>
-                    </form>
-                </div>
-                <div class="widget">
-                    <h3 class="widget_title">Voice Recorder Tool</h3>
-                    <div id='gUMArea'>
-                        <button class="btn btn-default" id='gUMbtn'>Request Voice Recorder</button>
-                    </div>
-                    <div id="record">
-                        <div id='btns'>
-                            <button class="btn btn-default" id='start'>Start</button>
-                            <button class="btn btn-default" id='stop'>Stop</button>
-                        </div>
-                        <div id="img-block">
-                            <img id="gif" src="{{ asset('images/recording.gif') }}" alt="">
-                        </div>
-                    </div>
-                    <div id="save">
-                        <ul class="list-unstyled" id='ul'></ul>
-                    </div>
-                </div>
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Hottest Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
-                </div>
-            </aside>
+            
+        {{-- </div> --}}
+    {{-- </section> --}}
+    <aside class="col-md-4 sidebar" style="position: sticky; top: 0; margin-bottom: 86px;"> 
+        <div class="widget widget_tag_cloud">
+            <h3 class="widget_title">Hottest Tags</h3>
+            <a href="#">projects</a>
+            <a href="#">Portfolio</a>
+            <a href="#">Wordpress</a>
+            <a href="#">Html</a>
+            <a href="#">Css</a>
+            <a href="#">jQuery</a>
+            <a href="#">2code</a>
+            <a href="#">vbegy</a>
         </div>
-    </section>
+        <div class="widget">
+            <h3 class="widget_title">IPA Tool</h3>
+            <form method="post" enctype="application/x-www-form-urlencoded" action="#">
+                <input type="text" name="resultview" class="resvew" style="font-size: 16px">
+                <div id="formcontent">
+                    <input type="text" id="result" class="res"/>
+                    <input type="text" id="resultweb" class="res"/>
+                </div>
+                <div class="typewriter">
+                    <script type="text/javascript">
+                        for(j = 0, z = 1; j < 1; j++, z = z + 10) {
+                            for (i = 1, k = z; i < 5; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            for (i = 5; i < 7; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"dipth\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            for (i = 7; i < 9; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"stress\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            document.write('<br/>');
+                        }
+                        for (j = 1, z = 11; j < 3; j++, z = z + 10) {
+                            for (i = 1, k = z; i < 5; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            for (i = 5; i < 8; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"dipth\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            document.write('<br/>');
+                        }
+                        for (j = 3, z = 31; j < 6; j++, z = z + 10) {
+                            for (i = 1, k = z; i < 9; i++, k++) {
+                                p = k % 10;
+                                document.write('<input type=\"button\" class=\"vowel\" onclick=\"javascript:chooseMe(' + k + ');\" value=\"' + buttonCaption(ipaCode[j][p]) + '\"/> ');
+                            }
+                            document.write('<br/>');
+                        }
+                    </script>
+                    <br/>
+                    <input type="button" onclick="clearOne();" class="buact" value="Delete"/>
+                    <input type="button" onclick="addSpace();" class="buact" value="Space"/>
+                    <input type="button" onclick="clearAll();;" class="buact" value="Reset"/>
+                    <br/><br/>
+                </div>
+            </form>
+        </div>
+        <div class="widget">
+            <h3 class="widget_title">Voice Recorder Tool</h3>
+            <div id='gUMArea'>
+                <button class="btn btn-default" id='gUMbtn'>Request Voice Recorder</button>
+            </div>
+            <div id="record">
+                <div id='btns'>
+                    <button class="btn btn-default" id='start'>Start</button>
+                    <button class="btn btn-default" id='stop'>Stop</button>
+                </div>
+                <div id="img-block">
+                    <img id="gif" src="{{ asset('images/recording.gif') }}" alt="">
+                </div>
+            </div>
+            <div id="save">
+                <ul class="list-unstyled" id='ul'></ul>
+            </div>
+        </div>
+        
+    </aside>
     <script src="{{ asset('js/editorInQuestionDetailsPage.js') }}"></script>
     <script>
         document.querySelectorAll('.ck-label').forEach(function (a) {

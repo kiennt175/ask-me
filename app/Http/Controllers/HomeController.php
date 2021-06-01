@@ -14,15 +14,17 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home');
+        $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('created_at')->get();
+        
+        return view('home', compact('questions'));
     }
 
-    public function search(Request $request)
-    {
-        if($request->textSearch){
-            $items = Question::search($request->input('textSearch'))->toArray();
-        }
+    // public function search(Request $request)
+    // {
+    //     if($request->textSearch){
+    //         $items = Question::search($request->input('textSearch'))->toArray();
+    //     }
 
-        dd($items);
-    }
+    //     dd($items);
+    // }
 }

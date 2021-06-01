@@ -28,7 +28,6 @@
     position: relative;
 }
 .ckeditor-container .ck.ck-editor {
-    
     width: 100%;
     max-width: 648px;
 }
@@ -285,6 +284,12 @@ blockquote, .qoute {
 }
 .question-edited {
     margin-left: 20px;
+}
+.copy-question-content {
+    font-size: 20px;
+    margin-left: -40px;
+    margin-top: 6px;
+    cursor: pointer;
 }
 // .new-comment-block, .comment-block {
 //     display: flex;

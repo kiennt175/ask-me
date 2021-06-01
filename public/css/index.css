@@ -35,3 +35,10 @@ li.active .page-link {
   color: #fff;
 }
 
+#question-search {
+  width: 847px;
+  margin-top: 1px;
+  background-color: white;
+  border-color: #3598DB;
+}
+

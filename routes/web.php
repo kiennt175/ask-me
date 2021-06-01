@@ -3,7 +3,15 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::get('search', 'HomeController@search')->name('search');
+Route::get('/create_index', function() {
+    \App\Models\Question::addAllToIndex();
+
+    return dd("indexed");
+});
+ 
+
+
+
 Auth::routes();
 Route::get('auth/redirect/{provider}', 'SocialLoginController@redirect')->name('login.social.redirect');
 Route::get('callback/{provider}', 'SocialLoginController@callback')->name('login.social.callback');
@@ -18,6 +26,7 @@ Route::group(['namespace' => 'User'], function () {
             Route::get('/questionForm', 'PostController@create')->name('user.showAskForm');
             Route::post('/postQuestion', 'PostController@store')->name('user.postQuestion');
             Route::get('/newsfeed', 'PostController@newsfeed')->name('user.newsfeed');
+            Route::get('/pendingQuestions', 'PostController@pending')->name('user.pending');
         });
         Route::post('resetPasswordLink', 'UserController@sendResetPasswordLink')->name('resetPasswordLink');
         Route::get('newPassword/{userId}/{token}', 'UserController@newPassword')->name('newPassword')->middleware('password.new');
@@ -25,6 +34,9 @@ Route::group(['namespace' => 'User'], function () {
     });
     Route::get('{userId}/newsfeed', 'UserController@newsfeed')->name('user.newsfeedBy');
     Route::group(['prefix' => 'questions'], function () {
+        // Route::get('search/{searchText}', 'QuestionController@search')->name('questions.search');
+        Route::get('/view', 'QuestionController@view')->name('questions.view');
+        Route::get('/view/{searchText}/{tab}', 'QuestionController@viewByTab')->name('questions.viewByTab');
         Route::get('/{questionId}', 'QuestionController@show')->name('questions.show');
         Route::get('/{questionId}/sortBy/{sortBy}', 'QuestionController@showBy')->name('questions.showBy');
         Route::middleware('auth')->group(function () {

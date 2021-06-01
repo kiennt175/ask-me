@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Carbon\Carbon;
 
 class PostController extends Controller
 {
@@ -32,12 +33,27 @@ class PostController extends Controller
         if (!$request->content) {
             return response()->json(['response' => 0]); 
         } 
+        if ($request->datetime) {
+            if (Carbon::parse($request->datetime)->subHours(7)->lte(Carbon::now()->addMinutes(5))) {
+                return response()->json(['response' => 2]); 
+            }
+        }
         DB::transaction(function () use ($request) {
             // save question
-            $question = Question::create([
-                'user_id' => Auth::id(),
-                'title' => trim($request->title)
-            ]);
+            if ($request->datetime) {
+                $question = Question::create([
+                    'user_id' => Auth::id(),
+                    'title' => trim($request->title),
+                    'schedule_time' => Carbon::parse($request->datetime)->subHours(7)->format('Y-m-d H:i:s'),
+                    'status' => 0
+                ]);
+            } else {
+                $question = Question::create([
+                    'user_id' => Auth::id(),
+                    'title' => trim($request->title)
+                ]);
+            }
+            
             // save tags
             $tags = explode(",", $request->tags);
             $formattedTags = [];
@@ -84,14 +100,26 @@ class PostController extends Controller
             } 
         });
         
-        return response()->json(['response' => 1]);
+        if ($request->datetime) {
+            return response()->json(['response' => 1, 'schedule' => 1]);
+        } else {
+            return response()->json(['response' => 1, 'schedule' => 0]);
+        }
     }
 
     public function newsfeed()
     {
         $user = Auth::user();
-        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
+        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->where('status', 1)->orderBy('created_at', 'desc')->paginate(10);
 
         return view('newsfeed', compact(['questions', 'user']));
+    }
+
+    public function pending()
+    {
+        $user = Auth::user();
+        $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->where('status', 0)->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('pending_question', compact(['questions', 'user']));
     }
 }

@@ -1,11 +1,11 @@
-$(document).ready(function(){
+$(document).ready(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
     var form = $('#post-question');
-    form.on('submit', function(e){
+    form.on('submit', function (e) {
         e.preventDefault();
         imgs = document.querySelectorAll(".uploaded-image");
         var imgUrls = [];
@@ -22,17 +22,30 @@ $(document).ready(function(){
             data: formData,
             processData: false, // for multipart/form-data
             contentType: false, // for multipart/form-data
-            success: function(data){
+            success: function (data) {
                 if (data.response == 1) {
-                    window.location.href = "http://localhost:8000/user/newsfeed";
-                } else {
+                    if (data.schedule == 0) {
+                        window.location.href = "http://localhost:8000/user/newsfeed"
+                    }
+                    if (data.schedule == 1) {
+                        window.location.href = "http://localhost:8000/user/pendingQuestions"
+                    }
+                };
+                if (data.response == 0) {
                     tata.error('Ask Question', 'Please fill out the required fields!', {
                         duration: 5000,
                         animate: 'slide'
                     });
+                };
+                if (data.response == 2) {
+                    tata.error('Ask Question', 'The schedule time needs to be 5 minutes longer than the current time!', {
+                        duration: 5000,
+                        animate: 'slide'
+                    });
                 }
+
             },
-            error: function(error){
+            error: function (error) {
                 tata.error('Ask Question', 'Failed to post the question!', {
                     duration: 5000,
                     animate: 'slide'

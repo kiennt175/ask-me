@@ -23,15 +23,25 @@ class Question extends Model
         'view_number',
         'best_answer_id',
         'vote_number',
-        'updated'
+        'updated',
+        'schedule_time',
+        'status'
     ];
 
     protected $mappingProperties = [
         'title' => [
             'type' => 'text',
-            "analyzer" => "standard",
+            "analyzer" => "classic",
         ],
     ];
+
+    function getIndexName() {
+        return 'forum';
+    } 
+
+    function getTypeName() {
+        return 'question';
+    }
 
     public function user()
     {

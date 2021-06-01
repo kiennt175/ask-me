@@ -150,6 +150,10 @@
                         <form action="{{ route('user.postQuestion') }}" method="post" id="post-question" enctype="multipart/form-data">
                             @csrf
 							<div class="form-inputs clearfix">
+                                <div class="schedule-block">
+                                    <label class="schedule-label">Schedule</label>
+                                    <input name="datetime" type="text" id="datetime-picker" placeholder="You can select datetime here to post this question...">
+                                </div>
 								<p>
 									<label class="required">Question Title<span>*</span></label>
 									<input type="text" id="question-title" name="title" required>
@@ -195,12 +199,6 @@
                                     </div>
                                 </p>
                             </div>
-                            <br>
-                            <div style="display: flex">
-                                <label class="schedule-label">Schedule</label>
-                                <input name="datetime" type="text" id="datetime-picker" placeholder="Select Date...">
-                            </div>
-                            <br><br>
 							<p class="form-submit">
 								<input type="submit" id="publish-question" value="Publish Your Question" class="button color small submit">
 							</p>

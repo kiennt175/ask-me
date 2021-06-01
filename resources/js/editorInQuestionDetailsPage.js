@@ -6,7 +6,7 @@ ClassicEditor
         licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
         link: {
             addTargetToExternalLinks: true
-        }
+        },
     })
     .then(editor => {
         theEditor = editor;
