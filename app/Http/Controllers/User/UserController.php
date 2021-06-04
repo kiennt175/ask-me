@@ -151,4 +151,34 @@ class UserController extends Controller
         
         return view('newsfeed', compact(['questions', 'user']));
     }
+
+    public function view($tab)
+    {
+        if ($tab == 'points') {
+            $users = User::orderBy('points', 'desc')->paginate(66);
+        }
+        if ($tab == 'name') {
+            $users = User::orderBy('name', 'asc')->paginate(66);
+        }
+        if ($tab == 'newest') {
+            $users = User::orderBy('id', 'desc')->paginate(66);
+        }
+        
+        return view('users', compact(['users', 'tab']));
+    }
+
+    public function search($searchText, $tab)
+    {
+        if ($tab == 'points') {
+            $users = User::where('name', 'like', '%' . $searchText . '%')->orWhere('username', 'like', '%' . $searchText . '%')->orderBy('points', 'desc')->paginate(66);
+        }
+        if ($tab == 'name') {
+            $users = User::where('name', 'like', '%' . $searchText . '%')->orWhere('username', 'like', '%' . $searchText . '%')->orderBy('name', 'asc')->paginate(66);
+        }
+        if ($tab == 'newest') {
+            $users = User::where('name', 'like', '%' . $searchText . '%')->orWhere('username', 'like', '%' . $searchText . '%')->orderBy('id', 'desc')->paginate(66);
+        }
+
+        return view('users', compact(['users', 'tab', 'searchText']));
+    }
 }

@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -132,14 +132,14 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 24:
+/***/ 27:
 /*!*********************************************!*\
   !*** multi ./resources/js/updateProfile.js ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/js/updateProfile.js */"./resources/js/updateProfile.js");
+module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/ask-me/resources/js/updateProfile.js */"./resources/js/updateProfile.js");
 
 
 /***/ })

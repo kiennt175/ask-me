@@ -123,7 +123,7 @@ $(document).ready(function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/đồ án tốt nghiệp/ask-me/resources/js/avatar.js */"./resources/js/avatar.js");
+module.exports = __webpack_require__(/*! /Users/kiennt175/Documents/ask-me/resources/js/avatar.js */"./resources/js/avatar.js");
 
 
 /***/ })

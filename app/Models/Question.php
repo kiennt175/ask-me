@@ -25,7 +25,8 @@ class Question extends Model
         'vote_number',
         'updated',
         'schedule_time',
-        'status'
+        'status',
+        'solved_at'
     ];
 
     protected $mappingProperties = [

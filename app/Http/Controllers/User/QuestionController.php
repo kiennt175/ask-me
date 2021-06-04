@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Arr;
+use Carbon\Carbon;
 
 class QuestionController extends Controller
 {
@@ -112,9 +113,15 @@ class QuestionController extends Controller
 
     public function bestAnswer(Request $request, $questionId)
     {
-        $question = Question::where('id', $questionId)->update([
-            'best_answer_id' => $request->answerId
+        $question = Question::where('id', $questionId)->first();
+        $question->update([
+            'best_answer_id' => $request->answerId,
         ]);
+        if ($question->solved_at == null) {
+            $question->update([
+                'solved_at' => Carbon::now()
+            ]);
+        }
 
         return response()->json(['response' => 1, 'answerId' => $request->answerId]);
     }

@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\User;
-use Illuminate\Support\Str;
+use App\Models\Question;
+use Carbon\Carbon;
+use App\Notifications\PublishQuestion;
+use Pusher\Pusher;
 
 class ScheduleQuestion extends Command
 {
@@ -39,6 +41,30 @@ class ScheduleQuestion extends Command
      */
     public function handle()
     {
-        $this->info('check');
+        $scheduleQuestions = Question::with('user')->where('schedule_time', '<=', Carbon::now())
+        ->where('status', 0)
+        ->get();
+        $scheduleQuestions->each->update(['status' => 1]);
+
+        $options = [
+            'cluster' => 'ap1',
+            'encrypted' => true
+        ];
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            $options
+        );
+        foreach ($scheduleQuestions as $scheduleQuestion) {
+            $data = [
+                'question_id' => $scheduleQuestion->id,
+                'question_title' => $scheduleQuestion->title
+            ];
+            $scheduleQuestion->user->notify(new PublishQuestion($data));
+            $pusher->trigger('PublishQuestionNotiEvent', 'publish-question', $data);
+
+        }
+
     }
 }
