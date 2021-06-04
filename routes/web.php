@@ -8,9 +8,24 @@ Route::get('/create_index', function() {
 
     return dd("indexed");
 });
- 
+Route::get('/resetQuestion', function () {
+    \App\Models\Question::where('id', '!=', null)->update([
+        'best_answer_id' => null,
+        'solved_at' => null
+    ]);
 
-
+    return dd('reseted');
+});
+Route::get('/testSchedule', function () {
+    $scheduleQuestions = \App\Models\Question::with('user')->where('schedule_time', '<=', Carbon\Carbon::now())->get();
+    $scheduleQuestions->each->update(['status' => 1]);
+    $questionIds = $scheduleQuestions->pluck('id')->toArray();
+    $userIds = [];
+    foreach ($scheduleQuestions as $scheduleQuestion) {
+        dd(['question_id' => $scheduleQuestion->id]);
+    }
+    dd($userIds);
+});
 
 Auth::routes();
 Route::get('auth/redirect/{provider}', 'SocialLoginController@redirect')->name('login.social.redirect');
@@ -51,5 +66,13 @@ Route::group(['namespace' => 'User'], function () {
             Route::get('{questionId}/edit', 'QuestionController@edit')->name('questions.edit')->middleware('question.edit');;
             Route::post('{questionId}/update', 'QuestionController@update')->name('questions.update');
         });
+    });
+    Route::group(['prefix' => 'tags'], function () {
+        Route::get('/view/{tab}', 'TagController@view')->name('tags.view');
+        Route::get('/search/{searchText}/{tab}', 'TagController@search')->name('tags.search');
+    });
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/view/{tab}', 'UserController@view')->name('users.view');
+        Route::get('/search/{searchText}/{tab}', 'UserController@search')->name('users.search');
     });
 });

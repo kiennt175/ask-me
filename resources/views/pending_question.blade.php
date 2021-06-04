@@ -63,7 +63,7 @@
 									@endif --}}
 									{{-- <span class="question-favorite"><i class="icon-star"></i>5</span> --}}
 								</div>
-								<span class="question-date"><i class="icon-time"></i>{{ $question->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
+								<span class="question-date"><i class="icon-time"></i>will be published at {{ $question->created_at->format('h:i d/m/Y') }}</span>
 								{{-- <span class="question-category"><i class="icon-heart"></i>{{ $question->vote_number }} votes</span>
 								<span class="question-comment"><i class="icon-comments"></i>{{ $question->answers->count() }} answers</span>
 								<span class="question-view"><i class="icon-eye-open"></i>{{ $question->view_number }} views</span> --}}

@@ -38,6 +38,8 @@
         <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
         <script src="{{ asset('ckeditor5-comment/build/ckeditor.js') }}"></script>
         <script src="{{ asset('js/search.js') }}"></script>
+        <script src="{{ asset('js/noti-bell.js') }}"></script>
+        
         {{-- <script src="{{ asset('bower_components/jBox/dist/jBox.all.min.js') }}"></script> --}}
     @show
 </head>
@@ -51,11 +53,11 @@
                 <div class="logo"><a href="{{ route('home') }}"><img alt="" src="{{ asset('bower_components/askme-style/images/logo.png') }}"></a></div>
                 <nav class="navigation">
                     <ul>
-                        <li id="explore" class="current_page_item"><a href="javascript:void(0)">Explore</a>
+                        <li id="explore" class=""><a href="javascript:void(0)">Explore</a>
                             <ul>
-                                <li id="questions" class="current_page_item"><a href="{{ route('questions.view') }}">Questions</a></li>
-                                <li><a href="">Tags</a></li>
-                                <li><a href="">Users</a></li>
+                                <li id="questions" class=""><a href="{{ route('questions.view') }}">Questions</a></li>
+                                <li><a href="{{ route('tags.view', 'popular') }}">Tags</a></li>
+                                <li><a href="{{ route('users.view', 'points') }}">Users</a></li>
                             </ul>
                         </li>
                         <li id="ask_question"><a href="{{ route('user.showAskForm') }}">Ask Question</a></li>
@@ -80,6 +82,21 @@
                         <li>
                             <input name="search" id="search" class="search-input" type="text" placeholder="Search here...">
                         </li>
+                        @auth
+                            <li>
+                                <div class="dropdown1">
+                                    <i class="icon-bell-alt" id="notification-bell"></i>
+                                    <div id="noti-block">
+                                        <span id="noti-count">{{ Auth::user()->unreadNotifications->count() }}</span>
+                                        <div id="noti-list" class="hidden">
+                                            @foreach (Auth::user()->notifications as $notification)
+                                                <a href="{{ route('questions.show', $notification->data['question_id']) }}"><div class="noti">Question "{{ $notification->data['question_title'] }}" is published!</div></a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>  
+                        @endauth 
                     </ul>
                 </nav>
             </section>
@@ -108,5 +125,18 @@
     <div class="go-up">
         <i class="icon-chevron-up"></i>
     </div>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            encrypted: true,
+            cluster: 'ap1'
+        });
+        var channel = pusher.subscribe('PublishQuestionNotiEvent');
+        channel.bind('publish-question', function(data) {
+            var newNoti = `<a href="http://localhost:8000/questions/${data.question_id}"><div class="noti">Question "${data.question_title}" is published!</div></a>`;
+            $('#noti-list').prepend(newNoti)
+            console.log(data);
+        });
+      </script>
 </body>
 </html>

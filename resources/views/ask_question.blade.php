@@ -141,8 +141,8 @@
             </div>
         </section>
     </div>
-    <section class="container main-content">
-        <div class="row">
+    {{-- <section class="container main-content">
+        <div class="row"> --}}
             <div class="col-md-8">
                 <div class="page-content ask-question">
                     <div class="boxedtitle page-title"><h2>Ask A Public Question</h2></div>
@@ -206,7 +206,7 @@
                     </div>
                 </div>
             </div>
-            <aside class="col-md-4 sidebar">
+            <aside class="col-md-4 sidebar" style="position: sticky; top: 0; margin-bottom: 86px;">
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
@@ -289,8 +289,8 @@
                     <a href="#">vbegy</a>
                 </div>
             </aside>
-        </div>
-    </section>
+        {{-- </div>
+    </section> --}}
     <script src="{{ asset('js/editor.js') }}"></script>
     <script>
         $('.input-images-2').imageUploader({
