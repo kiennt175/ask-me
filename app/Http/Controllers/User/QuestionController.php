@@ -402,14 +402,16 @@ class QuestionController extends Controller
                 $results = Question::complexSearch([
                     'body' => [
                         'query' => [
-                            'multi_match' => [
+                            'multi_match' => [ // search cho nhieu truong 
                                 'query' => $searchText,
                                 'fields' => ['title'],
-                                'fuzziness' => 'AUTO'
+                                'fuzziness' => 'AUTO' // search cac tu tuong dong nhau
                             ]
                         ]
                     ]
                 ])->getHits()['hits'];
+
+                
     
                 $ids = array_map(function($item){
                     return (int) $item['_id'];
