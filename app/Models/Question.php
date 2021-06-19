@@ -11,11 +11,15 @@ use App\Models\Image;
 use App\Models\Content;
 use App\Models\Vote;
 use App\Models\Answer;
+use App\Models\Collection;
 use Elasticquent\ElasticquentTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Follow;
 
 class Question extends Model
 {
     use ElasticquentTrait;
+    use SoftDeletes;
 
     protected $fillable = [ 
         'user_id',
@@ -82,5 +86,15 @@ class Question extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class);
+    }
+
+    public function follows()
+    {
+        return $this->morphMany(Follow::class, 'followable');
     }
 }

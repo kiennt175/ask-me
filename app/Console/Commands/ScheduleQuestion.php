@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Question;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Notifications\PublishQuestion;
+use App\Notifications\NewQuestionToFollowers;
 use Pusher\Pusher;
 
 class ScheduleQuestion extends Command
@@ -46,25 +48,30 @@ class ScheduleQuestion extends Command
         ->get();
         $scheduleQuestions->each->update(['status' => 1]);
 
-        $options = [
-            'cluster' => 'ap1',
-            'encrypted' => true
-        ];
-        $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            $options
-        );
         foreach ($scheduleQuestions as $scheduleQuestion) {
+            // add to index ES
+            $scheduleQuestion->addToIndex();
+            //
+            $user = User::find($scheduleQuestion->user_id);
             $data = [
                 'question_id' => $scheduleQuestion->id,
-                'question_title' => $scheduleQuestion->title
+                'question_title' => $scheduleQuestion->title,
+                'user_id' => $scheduleQuestion->user_id,
+                'user_avatar' => $user->avatar ?? asset('images/default_avatar.png'),
             ];
-            $scheduleQuestion->user->notify(new PublishQuestion($data));
-            $pusher->trigger('PublishQuestionNotiEvent', 'publish-question', $data);
-
+            $scheduleQuestion->user->notify(new PublishQuestion($data)); //tao du lieu trong db
+            // tìm những người theo dõi chủ của câu hỏi này
+            $followers = $user->follows;
+            // tạo thông báo tới các followers
+            foreach ($followers as $follower) {
+                $followerData = [
+                    'follower_id' => $follower->model_id,
+                    'user_avatar' => $user->avatar ?? asset('images/default_avatar.png'),
+                    'user_name' => $user->name,
+                    'question_id' => $scheduleQuestion->id,
+                ];
+                User::find($follower->model_id)->notify(new NewQuestionToFollowers($followerData));
+            }
         }
-
     }
 }

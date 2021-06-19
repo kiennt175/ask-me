@@ -1,9 +1,9 @@
 .add-more-media {
-    margin-left: 129px;
+    margin-left: 142px;
     margin-top: -51px;
 }
 .add-more-media-form {
-    width: 579px;
+    width: 635px;
 }
 .file-chooser {
     width: 100%;
@@ -18,4 +18,19 @@
 .schedule-block {
     display: flex;
     margin-bottom: 40px;
+}
+.page-content {
+    width: 820px;
+    margin-left: 50px;
+}
+.page-content .boxedtitle, .main-content .boxedtitle {
+    padding-left: 0px;
+}
+.boxedtitle {
+    border-bottom: 2px solid #E8E7E7 !important;
+    background-color: white !important;
+    h2 {
+        color: #3498db;
+        font-size: 20px !important;
+    }
 }

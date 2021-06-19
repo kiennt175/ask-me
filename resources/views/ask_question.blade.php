@@ -152,7 +152,7 @@
 							<div class="form-inputs clearfix">
                                 <div class="schedule-block">
                                     <label class="schedule-label">Schedule</label>
-                                    <input name="datetime" type="text" id="datetime-picker" placeholder="You can select datetime here to post this question...">
+                                    <input name="datetime" type="text" id="datetime-picker" placeholder="You can select datetime here to post this question later...">
                                 </div>
 								<p>
 									<label class="required">Question Title<span>*</span></label>
@@ -162,7 +162,7 @@
 								<p>
 									<label class="required">Tags<span>*</span></label>
 									<input type="text" class="input" name="tags" id="question_tags" data-seperator=",">
-									<span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
+									<span class="form-description">Please choose  suitable Keywords Ex : <span class="color">grammar , vocab</span> .</span>
 								</p>
 							</div>
 							<div id="form-textarea">
@@ -179,7 +179,7 @@
                                 <p>
                                     <label>Images</label>
                                     {{-- <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple> --}}
-                                    <div class="input-field">
+                                    <div id="add-images-ask-question" class="input-field">
                                         <div class="input-images-2" style="padding-top: .5rem;"></div>
                                     </div>
                                 </p>
@@ -206,11 +206,17 @@
                     </div>
                 </div>
             </div>
-            <aside class="col-md-4 sidebar" style="position: sticky; top: 0; margin-bottom: 86px;">
+            <aside class="col-md-3 sidebar" style="float: right; margin-right: 47px;">
+                <div class="widget widget_tag_cloud">
+                    <h3 class="widget_title">Hottest Tags</h3>
+                    @foreach ($topTags as $tag)
+						<a style="color: #2c5777 !important" class="home-tag" href="javascript:void(0)">{{ $tag->tag }}</a>
+					@endforeach
+                </div>
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
-                        <input type="text" name="resultview" class="resvew" style="font-size: 16px">
+                        <input id="resultview" type="text" name="resultview" class="resvew" style="font-size: 16px">
                         <div id="formcontent">
                             <input type="text" id="result" class="res"/>
                             <input type="text" id="resultweb" class="res"/>
@@ -254,7 +260,9 @@
                             <br/>
                             <input type="button" onclick="clearOne();" class="buact" value="Delete"/>
                             <input type="button" onclick="addSpace();" class="buact" value="Space"/>
-                            <input type="button" onclick="clearAll();;" class="buact" value="Reset"/>
+                            <input type="button" onclick="clearAll();" class="buact" value="Reset"/>
+                            <div style="margin-top: 5px"></div>
+                            <input id="copy-ipa" type="button" class="buact" value="Copy"/>
                             <br/><br/>
                         </div>
                     </form>
@@ -276,17 +284,6 @@
                     <div id="save">
                         <ul class="list-unstyled" id='ul'></ul>
                     </div>
-                </div>
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Hottest Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
                 </div>
             </aside>
         {{-- </div>

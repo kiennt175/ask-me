@@ -24,7 +24,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Newsfeed</h1>
+                    <h1>Questions</h1>
                 </div>
             </div>
         </section>
@@ -45,7 +45,7 @@
 							<i class="icon-remove remove-question-button" id="delete-question-{{ $question->id }}"></i>
 							{{-- <a class="question-report" href="#">Report</a> --}}
 							<div class="question-author">
-								<a href="{{ route('user.show', $user->id) }}" original-title="ahmed" class=""><span></span><img alt="" src="{{ $user->avatar }}"></a>
+								<a href="{{ route('user.show', $user->id) }}" original-title="ahmed" class=""><span></span><img alt="" src="{{ $user->avatar ?? asset('images/default_avatar.png') }}"></a>
 							</div>
 							<div class="question-inner">
 								<div class="clearfix"></div>

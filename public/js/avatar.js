@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -116,7 +116,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 5:
+/***/ 4:
 /*!**************************************!*\
   !*** multi ./resources/js/avatar.js ***!
   \**************************************/

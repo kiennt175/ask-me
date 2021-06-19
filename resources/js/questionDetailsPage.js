@@ -50,4 +50,46 @@ $(document).ready(function(){
         //     writer.insertText(content, { bold: true }, insertPosition);
         // } );
     });
+
+    $('.bxslider-title').attr('href', 'javascript:void(0)')
+
+    // delete answer
+    const deleteAns = $('.delete-ans');
+    deleteAns.on('click', function (e) {
+        var thisAns = $(this);
+        var answerId = $(this).attr('data-ans')
+        e.preventDefault();
+        cuteAlert({
+            type: "question",
+            title: "Delete Anser",
+            message: "Are you sure to delete this answer?",
+            confirmText: "Yes",
+            cancelText: "Cancel"
+        }).then((e) => {
+            if (e == ("confirm")) {
+                $.ajax({ 
+                    type: "POST",
+                    url: 'http://localhost:8000/answers/' + answerId + '/destroy',
+                    success: function (data) {
+                        $(`#answer-${answerId}`).remove();
+                        $('#answer-number').html(parseInt($('#answer-number').html()) - 1);
+                        if ($('.comment').length == 0) {
+                            window.location.href = `http://localhost:8000/questions/${questionId}`
+                        }
+                        if (!data.best_answer_id) {
+                            $('.go-to-best-ans').addClass('hidden');
+                            prev = $('.solved').prev();
+                            $('.solved').remove();
+                            $("<span class='question-answered question-answered-done solved hidden'><i class='icon-ok'></i>solved</span><span class='question-answered progress'><i class='icon-ok'></i>in progress</span>").insertAfter(prev)
+                        }
+                        
+                    },
+                    error: function (error) {
+
+                    }
+                });
+            } else {
+            }
+        })
+    });
 });

@@ -4,28 +4,29 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/create_index', function() {
-    \App\Models\Question::addAllToIndex();
+    \App\Models\Question::addAllToIndex(); 
+    \App\Models\Content::addAllToIndex();
 
     return dd("indexed");
 });
-Route::get('/resetQuestion', function () {
-    \App\Models\Question::where('id', '!=', null)->update([
-        'best_answer_id' => null,
-        'solved_at' => null
-    ]);
+// Route::get('/resetQuestion', function () {
+//     \App\Models\Question::where('id', '!=', null)->update([
+//         'best_answer_id' => null,
+//         'solved_at' => null
+//     ]);
 
-    return dd('reseted');
-});
-Route::get('/testSchedule', function () {
-    $scheduleQuestions = \App\Models\Question::with('user')->where('schedule_time', '<=', Carbon\Carbon::now())->get();
-    $scheduleQuestions->each->update(['status' => 1]);
-    $questionIds = $scheduleQuestions->pluck('id')->toArray();
-    $userIds = [];
-    foreach ($scheduleQuestions as $scheduleQuestion) {
-        dd(['question_id' => $scheduleQuestion->id]);
-    }
-    dd($userIds);
-});
+//     return dd('reseted');
+// });
+// Route::get('/testSchedule', function () {
+//     $scheduleQuestions = \App\Models\Question::with('user')->where('schedule_time', '<=', Carbon\Carbon::now())->get();
+//     $scheduleQuestions->each->update(['status' => 1]);
+//     $questionIds = $scheduleQuestions->pluck('id')->toArray();
+//     $userIds = [];
+//     foreach ($scheduleQuestions as $scheduleQuestion) {
+//         dd(['question_id' => $scheduleQuestion->id]);
+//     }
+//     dd($userIds);
+// });
 
 Auth::routes();
 Route::get('auth/redirect/{provider}', 'SocialLoginController@redirect')->name('login.social.redirect');
@@ -42,6 +43,19 @@ Route::group(['namespace' => 'User'], function () {
             Route::post('/postQuestion', 'PostController@store')->name('user.postQuestion');
             Route::get('/newsfeed', 'PostController@newsfeed')->name('user.newsfeed');
             Route::get('/pendingQuestions', 'PostController@pending')->name('user.pending');
+            Route::post('/saveQuestion/{questionId}', 'UserController@saveQuestion')->name('users.saveQuestion');
+            Route::post('/unsaveQuestion/{questionId}', 'UserController@unsaveQuestion')->name('users.unsaveQuestion');
+            Route::post('/saveToCollection/{questionId}', 'UserController@saveToCollection')->name('users.saveToCollection');
+            Route::get('/savedQuestions', 'UserController@savedQuestions')->name('users.savedQuestions');
+            Route::get('/collection/{collectionId}', 'CollectionController@show')->name('collections.show');
+            Route::post('/followUser/{userId}', 'UserController@followUser')->name('user.followUser');
+            Route::post('/unfollowUser/{userId}', 'UserController@unfollowUser')->name('user.unfollowUser');
+            Route::post('/followQuestion/{questionId}', 'UserController@followQuestion')->name('user.followQuestion');
+            Route::post('/unfollowQuestion/{questionId}', 'UserController@unfollowQuestion')->name('user.unfollowQuestion');
+            Route::get('/readNotiPublishQuestion/{notiId}/{questionId}', 'UserController@readNotiPublishQuestion')->name('user.readNotiPublishQuestion');
+            Route::get('/readNotiNewAnswer/{notiId}/{questionId}/{newAnswerId}', 'UserController@readNotiNewAnswer')->name('user.readNotiNewAnswer');
+            Route::get('/readNewCommentNoti/{notiId}/{questionId}/{commentId}/{page}', 'UserController@readNewCommentNoti')->name('user.readNewCommentNoti');
+            Route::get('/markAllAsRead', 'UserController@markAllAsRead')->name('user.markAllAsRead');
         });
         Route::post('resetPasswordLink', 'UserController@sendResetPasswordLink')->name('resetPasswordLink');
         Route::get('newPassword/{userId}/{token}', 'UserController@newPassword')->name('newPassword')->middleware('password.new');
@@ -54,6 +68,7 @@ Route::group(['namespace' => 'User'], function () {
         Route::get('/view/{searchText}/{tab}', 'QuestionController@viewByTab')->name('questions.viewByTab');
         Route::get('/{questionId}', 'QuestionController@show')->name('questions.show');
         Route::get('/{questionId}/sortBy/{sortBy}', 'QuestionController@showBy')->name('questions.showBy');
+        Route::get('/{questionId}/goToBestAnswer', 'QuestionController@goToBestAns')->name('questions.goToBestAns');
         Route::middleware('auth')->group(function () {
             Route::post('{questionId}/vote', 'QuestionController@vote')->name('questions.vote');
             Route::post('{questionId}/createAnswer', 'AnswerController@store')->name('answers.store');
@@ -63,8 +78,22 @@ Route::group(['namespace' => 'User'], function () {
             Route::patch('{questionId}/bestAnswer', 'QuestionController@bestAnswer')->name('questions.best');
             Route::post('answer/{answerId}/addComment', 'CommentController@store')->name('comments.store');
             Route::get('{questionId}/delete', 'QuestionController@destroy')->name('questions.destroy');
-            Route::get('{questionId}/edit', 'QuestionController@edit')->name('questions.edit')->middleware('question.edit');;
+            Route::get('{questionId}/edit', 'QuestionController@edit')->name('questions.edit')->middleware('question.edit');
             Route::post('{questionId}/update', 'QuestionController@update')->name('questions.update');
+        });
+    });
+    Route::group(['prefix' => 'answers'], function () {
+        Route::middleware('auth')->group(function () {
+            Route::get('{answerId}/edit', 'AnswerController@edit')->name('answers.edit')->middleware('answer.edit');
+            Route::post('{answerId}/update', 'AnswerController@update')->name('answers.update');
+            Route::post('{answerId}/destroy', 'AnswerController@destroy')->name('answers.destroy');
+            Route::get('readUpdateAnswerNoti/{notiId}/{questionId}/{answerId}', 'AnswerController@readUpdateAnswerNoti')->name('answers.readUpdateAnswerNoti');
+        });
+    });
+    Route::group(['prefix' => 'comments'], function () {
+        Route::middleware('auth')->group(function () {
+            Route::post('{commentId}/destroy', 'CommentController@destroy')->name('comments.destroy');
+            Route::post('{commentId}/update', 'CommentController@update')->name('comments.update');
         });
     });
     Route::group(['prefix' => 'tags'], function () {

@@ -7,12 +7,16 @@ use App\Models\User;
 use App\Models\Media;
 use App\Models\Image;
 use App\Models\Content;
+use App\Models\Question;
 use App\Models\Vote;
 use App\Models\Comment;
 use App\Models\Conversation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Answer extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = [ 
         'user_id',
         'question_id',
@@ -52,5 +56,10 @@ class Answer extends Model
     public function conversation()
     {
         return $this->hasOne(Conversation::class);
+    }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
     }
 }

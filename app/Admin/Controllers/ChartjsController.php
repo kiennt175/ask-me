@@ -123,7 +123,7 @@ class ChartjsController extends Controller
         // ER
         $erData = [];
         for ($i = 0; $i < 7; $i++) {
-            $erData[$i] = ($erTotalVotes[$i] + $erTotalComments[$i] + $erTotalAnswers[$i]) / ($erTotalQuestions[$i] * $erTotalUsers[$i]);
+            $erData[$i] = ($erTotalVotes[$i] + $erTotalComments[$i] + $erTotalAnswers[$i]) / ($erTotalQuestions[$i] * $erTotalUsers[$i]) * 100;
             $erData[$i] = number_format($erData[$i], 2, '.', '');
         };
 

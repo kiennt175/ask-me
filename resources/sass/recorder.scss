@@ -14,7 +14,7 @@
     font-weight: bold;
     height: 30px;
     font-family: "Open Sans", Arial, sans-serif;
-    margin: 36px 67px;
+    margin: 25px 32px;
     width: 181px;
 }
 #start, #stop {
@@ -22,10 +22,10 @@
     font-family: "Open Sans", Arial, sans-serif;
 }
 #start {
-    margin-left: -33px;
+    margin-left: -50px;
 }
 #stop {
-    margin-left: 45px;
+    margin-left: 22px;
 }
 #record {
     display: flex;
@@ -33,5 +33,8 @@
 }
 #save {
     margin-top: 20px;
-    margin-left: 10px;
+    // margin-left: 10px;
+}
+#ul audio {
+    max-width: 245px;
 }

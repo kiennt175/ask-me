@@ -12,6 +12,8 @@ use App\Models\Question;
 use App\Models\Vote;
 use App\Models\Comment;
 use App\Models\Answer;
+use App\Models\Collection;
+use App\Models\Follow;
 
 class User extends Authenticatable
 {
@@ -82,5 +84,15 @@ class User extends Authenticatable
     public function answers() 
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function collections() 
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    public function follows()
+    {
+        return $this->morphMany(Follow::class, 'followable');
     }
 }

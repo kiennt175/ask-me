@@ -3,7 +3,7 @@ window.theEditor;
 ClassicEditor
     .create(document.querySelector('#editor'), {
         initialData: content,
-        licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
+        licenseKey: 'DZQGbiL2bGkCEWeQq1FcLBUE5ihAhTBP10AylXlxn1JaWnH9u2YhE+eJ',
         link: {
             addTargetToExternalLinks: true
         },
@@ -57,7 +57,7 @@ ClassicEditor
     .create(document.querySelector('#answer-editor'), {
         initialData: '',
         extraPlugins: [CommentsAdapterForReply],
-        licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
+        licenseKey: 'DZQGbiL2bGkCEWeQq1FcLBUE5ihAhTBP10AylXlxn1JaWnH9u2YhE+eJ',
         sidebar: {
             container: document.querySelector('#answer-sidebar')
         },
@@ -86,7 +86,7 @@ ClassicEditor
         editor.editing.view.change(writer => {
             writer.setStyle(
                 "height",
-                "202px",
+                "239px",
                 editor.editing.view.document.getRoot()
             );
         });

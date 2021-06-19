@@ -49,19 +49,20 @@
                     <br><br>
 					<div class="tags-block">
 						<div class="">
-							<div class="clearfix">
+							<div class="clearfix pagination-user">
 								{{ $users->links() }}
+								<br>
 							</div>
 							<br><br>
                             @foreach ($users as $user)
                                 <li class="col-md-4 user-block">
                                     <div class="author-img">
-                                        <a href="#">
+                                        <a href="{{ route('user.show', $user->id) }}">
                                             <img width="60" height="60" src="{{ $user->avatar ?? asset('images/default_avatar.png') }}" alt="">
                                         </a>
                                     </div>
                                     <div class="user-info">
-                                        <h6 class="name"><a href="#">{{ $user->name }}</a></h6>
+                                        <h6 class="name"><a href="{{ route('user.show', $user->id) }}">{{ $user->name }}</a></h6>
                                         <span class="username"><i>{{ $user->username ?? '' }}</i></span>
                                         <div class="after-username"></div>
                                         @if ($tab == 'points')

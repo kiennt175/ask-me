@@ -1,4 +1,11 @@
 $(document).ready(function(){
+    const items = document.querySelectorAll('.current_page_item');
+    items.forEach((item) => {
+        item.classList.remove("current_page_item");
+    });
+    document.getElementById("personal").classList.add('current_page_item');
+    document.getElementById("my-profile").classList.add('current_page_item');
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

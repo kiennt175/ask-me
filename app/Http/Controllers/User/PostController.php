@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
+use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
+use App\Notifications\PublishQuestion;
+use App\Notifications\NewQuestionToFollowers;
 
 class PostController extends Controller
 {
     public function create()
     {
         $avatar = Auth::user()->avatar;
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get(); 
 
-        return view('ask_question', compact('avatar'));
+        return view('ask_question', compact(['avatar', 'topTags']));
     }
 
     public function store(Request $request)
@@ -34,26 +38,25 @@ class PostController extends Controller
             return response()->json(['response' => 0]); 
         } 
         if ($request->datetime) {
-            if (Carbon::parse($request->datetime)->subHours(7)->lte(Carbon::now()->addMinutes(5))) {
+            if (Carbon::parse($request->datetime)->subHours(7)->lte(Carbon::now()->addMinutes(0))) {
                 return response()->json(['response' => 2]); 
             }
         }
-        DB::transaction(function () use ($request) {
-            // save question
-            if ($request->datetime) {
-                $question = Question::create([
-                    'user_id' => Auth::id(),
-                    'title' => trim($request->title),
-                    'schedule_time' => Carbon::parse($request->datetime)->subHours(7)->format('Y-m-d H:i:s'),
-                    'status' => 0
-                ]);
-            } else {
-                $question = Question::create([
-                    'user_id' => Auth::id(),
-                    'title' => trim($request->title)
-                ]);
-            }
-            
+        // save question
+        if ($request->datetime) {
+            $question = Question::create([
+                'user_id' => Auth::id(),
+                'title' => trim($request->title),
+                'schedule_time' => Carbon::parse($request->datetime)->subHours(7)->format('Y-m-d H:i:s'),
+                'status' => 0
+            ]);
+        } else {
+            $question = Question::create([
+                'user_id' => Auth::id(),
+                'title' => trim($request->title)
+            ]);
+        }
+        DB::transaction(function () use ($request, $question) {
             // save tags
             $tags = explode(",", $request->tags);
             $formattedTags = [];
@@ -103,7 +106,23 @@ class PostController extends Controller
         if ($request->datetime) {
             return response()->json(['response' => 1, 'schedule' => 1]);
         } else {
-            return response()->json(['response' => 1, 'schedule' => 0]);
+            // add to index ES
+            $question->addToIndex();
+            //notify
+            // tìm những người theo dõi tac gia của câu hỏi này
+            $followers = Auth::user()->follows;
+            // tạo thông báo tới các followers
+            foreach ($followers as $follower) {
+                $followerData = [
+                    'follower_id' => $follower->model_id,
+                    'user_avatar' => Auth::user()->avatar ?? asset('images/default_avatar.png'),
+                    'user_name' => Auth::user()->name,
+                    'question_id' => $question->id,
+                ];
+                User::find($follower->model_id)->notify(new NewQuestionToFollowers($followerData));
+            }
+
+            return response()->json(['response' => 1, 'schedule' => 0, 'question_id' => $question->id]);
         }
     }
 
