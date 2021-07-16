@@ -36,151 +36,146 @@
 			</div>
 		</div>
 	</div>
-	{{-- <section class="container main-content"> --}}
-		{{-- <div class="row"> --}}
-			<div class="col-md-8" style="margin-left: 53px">
-				{{-- <h3>Search for questions</h3>
-				<input id="question-search" type="text" placeholder="Search for questions..."> --}}
-				{{-- <br> --}}
-				<div class="tabs-warp question-tab">
-					<ul class="tabs">
-						<li class="tab"><a href="javascript:void(0)" class="current">Newest</a></li>
-						<li class="tab"><a href="javascript:void(0)">Unanswered</a></li>
-						<li class="tab"><a href="javascript:void(0)">Votes</a></li>
-					</ul>
-					<div class="tab-inner-warp">
-						<div class="tab-inner">
-							@foreach ($newestQuestions as $question)
-								<article class="question question-type-normal" style="margin-bottom: 5px;">
-									<h2>
-										<a href="{{ route('questions.show', $question->id) }}">{{ $question->title }}</a>
-									</h2>
-									<div class="question-author">
-										<a href="{{ route('user.show', $question->user->id) }}" original-title="" class="question-author-img tooltip-n">
-											<span></span>
-											<img alt="" src="{{ $question->user->avatar ?? asset('images/default_avatar.png') }}">
+	<div class="col-md-8" style="margin-left: 53px">
+		<div class="tabs-warp question-tab">
+			<ul class="tabs">
+				<li class="tab"><a href="javascript:void(0)" class="current">Newest</a></li>
+				<li class="tab"><a href="javascript:void(0)">Unsolved</a></li>
+				<li class="tab"><a href="javascript:void(0)">Votes</a></li>
+			</ul>
+			<div class="tab-inner-warp">
+				<div class="tab-inner">
+					@foreach ($newestQuestions as $question)
+						<article class="question question-type-normal" style="margin-bottom: 5px;">
+							<h2>
+								<a href="{{ route('questions.show', $question->id) }}">{{ $question->title }}</a>
+							</h2>
+							<div class="question-author">
+								<a href="{{ route('user.show', $question->user->id) }}" original-title="" class="question-author-img tooltip-n">
+									<span></span>
+									<img alt="" src="{{ $question->user->avatar ?? asset('images/default_avatar.png') }}">
+								</a>
+							</div>
+							<div class="question-inner">
+								<div class="clearfix"></div>
+								<p class="question-desc">
+									<span class="character-limitation">{{ mb_substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
+									<br><br>
+									@foreach ($question->tags as $questionTag)
+										<a href="http://localhost:8000/questions/view/[{{ $questionTag->tag }}]/newest#tab-top">
+											<button class="home-tag">{{ $questionTag->tag }}</button>
 										</a>
-									</div>
-									<div class="question-inner">
-										<div class="clearfix"></div>
-										<p class="question-desc">
-											<span class="character-limitation">{{ substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
-											<br><br>
-											@foreach ($question->tags as $questionTag)
-												<button class="home-tag">{{ $questionTag->tag }}</button>
-											@endforeach
-										</p>
-										<div class="question-details">
-											@if ($question->best_answer_id)
-												<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-											@else 
-												<span class="question-answered"><i class="icon-ok"></i>in progress</span>
-											@endif
-										</div>
-										@if ($question->vote_number && $question->vote_number >=2)
-											<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $question->vote_number }} votes</span>
-										@else 	
-											<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $question->vote_number }} vote</span>
-										@endif
-										<span class="question-date"><i class="icon-time"></i>{{ $question->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
-										<span class="question-comment">
-											<a href="javascript:void(0)"><i class="icon-comments-alt"></i>{{ $question->answers->count() }} Answers</a>
-										</span>
-										<span class="question-view"><i class="icon-eye-open"></i>70 views</span>
-										<div class="clearfix"></div>
-									</div>
-								</article>
-							@endforeach
-							<div style="margin-bottom: 30px"></div>
-							<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
-						</div>
-					</div>
-					<div class="tab-inner-warp">
-						<div class="tab-inner">
-							@foreach ($unansweredQuestions as $unansweredQuestion)
-							<article class="question question-type-normal" style="margin-bottom: 5px;">
-								<h2>
-									<a href="{{ route('questions.show', $unansweredQuestion->id) }}">{{ $unansweredQuestion->title }}</a>
-								</h2>
-								<div class="question-author">
-									<a href="{{ route('user.show', $unansweredQuestion->user->id) }}" original-title="" class="question-author-img tooltip-n">
-										<span></span>
-										<img alt="" src="{{ $unansweredQuestion->user->avatar }}">
-									</a>
-								</div>
-								<div class="question-inner">
-									<div class="clearfix"></div>
-									<p class="question-desc">{{ substr(html_entity_decode(strip_tags($unansweredQuestion->content->content)),0,255) . '...' }}</p>
-									<div class="question-details">
-										@if ($unansweredQuestion->best_answer_id)
-											<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-										@else 
-											<span class="question-answered"><i class="icon-ok"></i>in progress</span>
-										@endif
-									</div>
-									@if ($unansweredQuestion->vote_number && $unansweredQuestion->vote_number >=2)
-										<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $unansweredQuestion->vote_number }} votes</span>
-									@else 	
-										<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $unansweredQuestion->vote_number }} vote</span>
+									@endforeach
+								</p>
+								<div class="question-details">
+									@if ($question->best_answer_id)
+										<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+									@else 
+										<span class="question-answered"><i class="icon-ok"></i>in progress</span>
 									@endif
-									<span class="question-date"><i class="icon-time"></i>{{ $unansweredQuestion->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
-									<span class="question-comment">
-										<a href="javascript:void(0)"><i class="icon-comments-alt"></i>{{ $unansweredQuestion->answers->count() }} Answers</a>
-									</span>
-									<span class="question-view"><i class="icon-eye-open"></i>70 views</span>
-									<div class="clearfix"></div>
 								</div>
-							</article>
-							@endforeach
-							<div style="margin-bottom: 30px"></div>
-							<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
-						</div>
-					</div>
-					<div class="tab-inner-warp">
-						<div class="tab-inner">
-							@foreach ($votesQuestions as $votesQuestion)
-								<article class="question question-type-normal" style="margin-bottom: 5px;">
-									<h2>
-										<a href="{{ route('questions.show', $votesQuestion->id) }}">{{ $votesQuestion->title }}</a>
-									</h2>
-									<div class="question-author">
-										<a href="{{ route('user.show', $votesQuestion->user->id) }}" original-title="" class="question-author-img tooltip-n">
-											<span></span>
-											<img alt="" src="{{ $votesQuestion->user->avatar }}">
-										</a>
-									</div>
-									<div class="question-inner">
-										<div class="clearfix"></div>
-										<p class="question-desc">{{ substr(html_entity_decode(strip_tags($votesQuestion->content->content)),0,255) . '...' }}</p>
-										<div class="question-details">
-											@if ($votesQuestion->best_answer_id)
-												<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-											@else 
-												<span class="question-answered"><i class="icon-ok"></i>in progress</span>
-											@endif
-										</div>
-										@if ($votesQuestion->vote_number && $votesQuestion->vote_number >=2)
-											<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $votesQuestion->vote_number }} votes</span>
-										@else 	
-											<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $votesQuestion->vote_number }} vote</span>
-										@endif
-										<span class="question-date"><i class="icon-time"></i>{{ $votesQuestion->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
-										<span class="question-comment">
-											<a href="javascript:void(0)"><i class="icon-comments-alt"></i>{{ $votesQuestion->answers->count() }} Answers</a>
-										</span>
-										<span class="question-view"><i class="icon-eye-open"></i>70 views</span>
-										<div class="clearfix"></div>
-									</div>
-								</article>
-							@endforeach
-							<div style="margin-bottom: 30px"></div>
-							<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
-						</div>
-					</div>
+								@if ($question->vote_number && $question->vote_number >=2)
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $question->vote_number }} votes</span>
+								@else 	
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $question->vote_number }} vote</span>
+								@endif
+								<span class="question-date"><i class="icon-time"></i>{{ $question->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
+								<span class="question-comment">
+									<i class="icon-comments-alt"></i>{{ $question->answers->count() }} Answers
+								</span>
+								<span class="question-view"><i class="icon-eye-open"></i>{{ $question->view_number }}</span>
+								<div class="clearfix"></div>
+							</div>
+						</article>
+					@endforeach
+					<div style="margin-bottom: 30px"></div>
+					<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
 				</div>
 			</div>
-		{{-- </div>
-	</section> --}}
+			<div class="tab-inner-warp">
+				<div class="tab-inner">
+					@foreach ($unansweredQuestions as $unansweredQuestion)
+						<article class="question question-type-normal" style="margin-bottom: 5px;">
+							<h2>
+								<a href="{{ route('questions.show', $unansweredQuestion->id) }}">{{ $unansweredQuestion->title }}</a>
+							</h2>
+							<div class="question-author">
+								<a href="{{ route('user.show', $unansweredQuestion->user->id) }}" original-title="" class="question-author-img tooltip-n">
+									<span></span>
+									<img alt="" src="{{ $unansweredQuestion->user->avatar }}">
+								</a>
+							</div>
+							<div class="question-inner">
+								<div class="clearfix"></div>
+								<p class="question-desc">{{ mb_substr(html_entity_decode(strip_tags($unansweredQuestion->content->content)),0,255) . '...' }}</p>
+								<div class="question-details">
+									@if ($unansweredQuestion->best_answer_id)
+										<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+									@else 
+										<span class="question-answered"><i class="icon-ok"></i>in progress</span>
+									@endif
+								</div>
+								@if ($unansweredQuestion->vote_number && $unansweredQuestion->vote_number >=2)
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $unansweredQuestion->vote_number }} votes</span>
+								@else 	
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $unansweredQuestion->vote_number }} vote</span>
+								@endif
+								<span class="question-date"><i class="icon-time"></i>{{ $unansweredQuestion->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
+								<span class="question-comment">
+									<i class="icon-comments-alt"></i>{{ $unansweredQuestion->answers->count() }} Answers
+								</span>
+								<span class="question-view"><i class="icon-eye-open"></i>{{ $unansweredQuestion->view_number }}</span>
+								<div class="clearfix"></div>
+							</div>
+						</article>
+					@endforeach
+					<div style="margin-bottom: 30px"></div>
+					<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
+				</div>
+			</div>
+			<div class="tab-inner-warp">
+				<div class="tab-inner">
+					@foreach ($votesQuestions as $votesQuestion)
+						<article class="question question-type-normal" style="margin-bottom: 5px;">
+							<h2>
+								<a href="{{ route('questions.show', $votesQuestion->id) }}">{{ $votesQuestion->title }}</a>
+							</h2>
+							<div class="question-author">
+								<a href="{{ route('user.show', $votesQuestion->user->id) }}" original-title="" class="question-author-img tooltip-n">
+									<span></span>
+									<img alt="" src="{{ $votesQuestion->user->avatar }}">
+								</a>
+							</div>
+							<div class="question-inner">
+								<div class="clearfix"></div>
+								<p class="question-desc">{{ mb_substr(html_entity_decode(strip_tags($votesQuestion->content->content)),0,255) . '...' }}</p>
+								<div class="question-details">
+									@if ($votesQuestion->best_answer_id)
+										<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+									@else 
+										<span class="question-answered"><i class="icon-ok"></i>in progress</span>
+									@endif
+								</div>
+								@if ($votesQuestion->vote_number && $votesQuestion->vote_number >=2)
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $votesQuestion->vote_number }} votes</span>
+								@else 	
+									<span class="question-category" style="color: black"><i class="icon-heart-empty"></i>{{ $votesQuestion->vote_number }} vote</span>
+								@endif
+								<span class="question-date"><i class="icon-time"></i>{{ $votesQuestion->created_at->diffForHumans(Carbon\Carbon::now()) }}</span>
+								<span class="question-comment">
+									<i class="icon-comments-alt"></i>{{ $votesQuestion->answers->count() }} Answers
+								</span>
+								<span class="question-view"><i class="icon-eye-open"></i>{{ $votesQuestion->view_number }}</span>
+								<div class="clearfix"></div>
+							</div>
+						</article>
+					@endforeach
+					<div style="margin-bottom: 30px"></div>
+					<a href="{{ route('questions.view') }}" class="load-questions"><i class="icon-globe"></i>Explore More Questions</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	<aside class="col-md-3 sidebar">
 		<div class="widget widget_highest_points">
 			<h3 class="widget_title">Top Users</h3>
@@ -201,7 +196,9 @@
 		<div class="widget widget_tag_cloud">
 			<h3 class="widget_title">Hottest Tags</h3>
 			@foreach ($topTags as $tag)
-				<div><a style="color: #2c5777 !important" class="home-tag" href="javascript:void(0)">{{ $tag->tag }}</a></div>
+				<div>
+					<a style="color: #2c5777 !important" class="home-tag" href="http://localhost:8000/questions/view/[{{ $tag->tag }}]/newest#tab-top">{{ $tag->tag }}</a>
+				</div>
 			@endforeach
 		</div>
 		<div class="widget widget_social">

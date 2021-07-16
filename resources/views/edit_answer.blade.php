@@ -158,7 +158,7 @@
 								</p>
 							</div>
                             <br><br>
-                            <div class="form-inputs clearfix">
+                            <div class="form-inputs clearfix edit-the-answer">
                                 <p>
                                     <label class="required">Images</label>
                                     {{-- <input type="file" name="images[]" accept="image/x-png,image/gif,image/jpeg,image/jpg" multiple> --}}
@@ -189,7 +189,7 @@
                                             <div class="media">
                                                 @foreach ($medias as $media)
                                                     <div class="audio">
-                                                        <audio controls controlsList="nodownload" style="width: 240px; position: relative;" >
+                                                        <audio controls controlsList="nodownload" style="width: 222px; position: relative;" preload="auto">
                                                             <source src="{{ $media->url }}" type="audio/ogg">
                                                             <source src="{{ $media->url }}" type="audio/mpeg">
                                                             Your browser does not support the audio element.

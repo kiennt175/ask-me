@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'password.new' => \App\Http\Middleware\NewPassword::class,
         'question.edit' => \App\Http\Middleware\EditQuestion::class,
         'answer.edit' => \App\Http\Middleware\EditAnswer::class,
+        'question.pending' => \App\Http\Middleware\PendingQuestion::class
     ];
 }

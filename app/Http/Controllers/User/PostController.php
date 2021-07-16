@@ -19,7 +19,7 @@ class PostController extends Controller
     public function create()
     {
         $avatar = Auth::user()->avatar;
-        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get(); 
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(9)->get(); 
 
         return view('ask_question', compact(['avatar', 'topTags']));
     }
@@ -31,7 +31,7 @@ class PostController extends Controller
                 'title' => ['required', 'string', 'max:255'],
                 'tags' => ['required'],
                 'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
-                'audios.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
+                'audios.*' => 'mimetypes:audio/mpeg,video/webm,audio/ogg|max:3072'
             ]
 	    ); 
         if (!$request->content) {
@@ -130,8 +130,10 @@ class PostController extends Controller
     {
         $user = Auth::user();
         $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->where('status', 1)->orderBy('created_at', 'desc')->paginate(10);
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $totalQuestions = $user->questions->where('status', 1)->count();
 
-        return view('newsfeed', compact(['questions', 'user']));
+        return view('newsfeed', compact(['questions', 'user', 'topTags', 'totalQuestions']));
     }
 
     public function pending()

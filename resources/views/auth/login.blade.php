@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Log in</title>
+    <title>Log In | ASK Me</title>
 	<link rel="shortcut icon" href="{{ asset('bower_components/askme-style/images/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/login-signup-form-style/fonts/material-icon/css/material-design-iconic-font.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/login-signup-form-style/css/style.css') }}">
@@ -63,8 +63,8 @@
     </div>
     <script src="{{ asset('bower_components/login-signup-form-style/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/login-signup-form-style/js/main.js') }}"></script>
-    @if (session('mail-successfully'))
-        <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
+    <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
+    @if (session('mail-successfully') == true)
         <script>
             tata.success('Reset password', 'Please check your e-mail to reset password!', {
                 duration: 5000,
@@ -73,7 +73,6 @@
         </script>
     @endif
     @if (session('new-password'))
-        <script src="{{ asset('bower_components/tata-js/dist/tata.js') }}"></script>
         <script>
             tata.success('Reset password', 'Reset password successfully!', {
                 duration: 5000,

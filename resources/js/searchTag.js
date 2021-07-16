@@ -3,8 +3,6 @@ $(document).ready(function () {
     items.forEach((item) => {
         item.classList.remove("current_page_item");
     });
-    document.getElementById("explore").classList.add('current_page_item');
-    document.getElementById("tags").classList.add('current_page_item');
 
     $('#tag-search').on('keyup', function (e) {
         e.preventDefault()

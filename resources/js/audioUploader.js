@@ -12,7 +12,8 @@ $(document).ready(function () {
                     BadTypeErrorMessage: "We cannot accept this file type at this time.",
                     acceptedFileTypes: [
                         'ogg',
-                        'mp3'
+                        'mp3',
+                        'oga'
                     ]
                 },
                 options

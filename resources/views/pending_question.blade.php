@@ -49,7 +49,7 @@
 							<div class="question-inner">
 								<div class="clearfix"></div>
 								<p class="question-desc">
-									<span class="character-limitation">{{ substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
+									<span class="character-limitation">{{ mb_substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
 									<br><br>
 									@foreach ($question->tags as $tag)
 										<button class="tags">{{ $tag->tag }}</button>
@@ -63,7 +63,7 @@
 									@endif --}}
 									{{-- <span class="question-favorite"><i class="icon-star"></i>5</span> --}}
 								</div>
-								<span class="question-date"><i class="icon-time"></i>will be published at {{ $question->created_at->format('h:i d/m/Y') }}</span>
+								<span class="question-date"><i class="icon-time"></i>will be published at  {{ Carbon\Carbon::parse($question->schedule_time)->addHours(7)->format('H:i d/m/Y') }}</span>
 								{{-- <span class="question-category"><i class="icon-heart"></i>{{ $question->vote_number }} votes</span>
 								<span class="question-comment"><i class="icon-comments"></i>{{ $question->answers->count() }} answers</span>
 								<span class="question-view"><i class="icon-eye-open"></i>{{ $question->view_number }} views</span> --}}

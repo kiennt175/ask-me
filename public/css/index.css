@@ -27,7 +27,8 @@ textarea#bio {
 }
 
 .error_404 {
-  margin-bottom: 76px;
+  margin-top: 42px;
+  margin-bottom: 112px;
 }
 
 li.active .page-link {

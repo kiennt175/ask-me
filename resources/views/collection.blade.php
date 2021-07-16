@@ -7,10 +7,19 @@
 @section('style')
 	@parent
     <link rel="stylesheet" href="{{ asset('css/saved-question-page.css') }}">
+	<link rel="stylesheet" href="{{ asset('bower_components/jquery-modal/jquery.modal.css') }}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('css/avatar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/collectionDetail.css') }}">
+	<link rel="stylesheet" href="{{ asset('bower_components/cute-alert/style.css') }}">
 @endsection
 
 @section('scripts')
 	@parent
+	<script src="{{ asset('bower_components/jquery-modal/jquery.modal.min.js') }}"></script>
+	<script src="{{ asset('js/avatar.js') }}"></script>
+	<script src="{{ asset('js/collection-options.js') }}"></script>
+	<script src="{{ asset('bower_components/cute-alert/cute-alert.js') }}"></script>
 @endsection
 
 @section('content')
@@ -18,7 +27,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Collection "{{ $collection->name }}"</h1>
+                    <h1>Collection "<span id="collection-name">{{ $collection->name }}</span>"</h1>
                 </div>
             </div>
         </section>
@@ -26,6 +35,26 @@
     <section class="container main-content">
 		<div class="row">
 			<div class="col-md-9">
+				
+				<a href="#edit-collection" rel="modal:open"><button class="collection-tag">Edit</button></a>
+				<form action="{{ route('collections.update', $collection->id) }}" id="edit-collection" class="modal" method="post">
+					@csrf 
+					<div class="avatar-wrapper">
+						<img src="{{ $collection->image }}" alt="" class="profile-pic">
+						<div class="upload-button">
+							<i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+						</div>
+						<input class="file-upload" id="avatar" name="image" type="file" accept="image/*"/>
+					</div>
+					<div style="text-align: center;">
+						<input name="name" style="text-align: center; margin: auto" type="text" value="{{ $collection->name }}">
+						<br>
+						<input class="update-collection" type="submit" value="Update">
+						<a href="javascript:void(0)" rel="modal:close" id="cancel-updating" class="hidden">Close</a>
+					</div>
+				</form>
+				<button id="delete-collection" data-collection="{{ $collection->id }}" class="collection-tag" style="margin-left: 5px">Delete</button>
+				<br><br>
 				<div class="infinite-scroll">
 					@foreach ($collection->questions as $question)
 						<article class="question question-type-normal">
@@ -40,7 +69,7 @@
 							<div class="question-inner">
 								<div class="clearfix"></div>
 								<p class="question-desc">
-									<span class="character-limitation">{{ substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
+									<span class="character-limitation">{{ mb_substr(html_entity_decode(strip_tags($question->content->content)),0,255) . '...' }}</span>
 									<br><br>
 									@foreach ($question->tags as $tag)
 										<button class="tags">{{ $tag->tag }}</button>

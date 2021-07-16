@@ -30,7 +30,8 @@ class Question extends Model
         'updated',
         'schedule_time',
         'status',
-        'solved_at'
+        'solved_at',
+        'created_at'
     ];
 
     protected $mappingProperties = [

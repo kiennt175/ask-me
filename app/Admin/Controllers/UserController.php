@@ -60,6 +60,12 @@ class UserController extends AdminController
                 $batch->add(new BatchRestore());
             }
         });
+        $grid->export(function ($export) {
+
+            $export->column('id', function ($value, $original) {
+                return $original;
+            });
+        });
         
         return $grid;
     }

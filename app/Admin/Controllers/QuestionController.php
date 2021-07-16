@@ -20,7 +20,7 @@ class QuestionController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Question());
-
+       
         $grid->column('id', __('Question Id'))->display(function ($id) {
             return "<a style='color: white' href='http://localhost:8000/admin/manage/questions/{$id}'><span class='label label-success'>{$id}</span></a>";
         })->filter()->sortable();
@@ -68,6 +68,13 @@ class QuestionController extends AdminController
                 
             }
         });
+        $grid->export(function ($export) {
+
+            $export->column('id', function ($value, $original) {
+                return html_entity_decode(strip_tags($original));
+            });
+        });
+        // $grid->column('id')->totalRow();
 
         return $grid;
     }

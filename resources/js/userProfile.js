@@ -3,6 +3,4 @@ $(document).ready(function () {
     items.forEach((item) => {
         item.classList.remove("current_page_item");
     });
-    document.getElementById("explore").classList.add('current_page_item');
-    document.getElementById("users").classList.add('current_page_item');
 });

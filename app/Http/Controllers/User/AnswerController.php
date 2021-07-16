@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Notifications\NewAnswerToFollowers;
 use App\Notifications\UpdateAnswerNoti;
+use App\Notifications\NewPrivateCommentNoti;
 use Illuminate\Support\Facades\File; 
 use App\Models\Image;
 use App\Models\Media;
@@ -20,6 +21,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class AnswerController extends Controller
 {
+    public function show($answerId) {
+        $answer = Answer::find($answerId);
+        $question = $answer->question;
+        $page = (int) ceil($question->answers->where('id', '<=', $answerId)->count() / 5);
+
+        return Redirect::to('http://localhost:8000/questions/' . $question->id . '?page=' . $page . '#answer-' . $answerId);
+    }
+
     public function store(Request $request, $questionId)
     {
         if (!Auth::check()) {
@@ -28,7 +37,7 @@ class AnswerController extends Controller
         $this->validate($request, 
             [
                 'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
-                'medias.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
+                'medias.*' => 'mimetypes:audio/mpeg,video/webm,audio/ogg|max:3072'
             ]
 	    ); 
         if (!$request->content) {
@@ -169,6 +178,34 @@ class AnswerController extends Controller
             $conversation->update([
                 'conversation' => $request->conversation
             ]);
+            if (isset($request->addComment)) {
+                $answer = Answer::with(['question.user', 'user'])->where('id', $answerId)->first();
+                $answerUserId = $answer->user->id;
+                $questionUserId = $answer->question->user->id;
+                // nguoi add la chu cau hoi, gui thong bao toi chu cau tra loi
+                if ($answerUserId != $questionUserId && Auth::id() == $questionUserId) {
+                    User::find($answerUserId)->notify(new NewPrivateCommentNoti([
+                        'question_user_avatar' => $answer->question->user->avatar ?? asset('images/default_avatar.png'),
+                        'question_user_name' => $answer->question->user->name,
+                        'question_title' => $answer->question->title,
+                        'answer_user_id' => $answerUserId,
+                        'answer_id' => $answerId,
+                        'question_id' => $answer->question->id,
+                        'page' => (int) ceil(Question::find($answer->question->id)->answers->where('id', '<=', $answerId)->count() / 5)
+                    ]));
+                } else {
+                    // nguoi add la chu cau tra loi, gui thong bao toi chu cau hoi
+                    User::find($questionUserId)->notify(new NewPrivateCommentNoti([
+                        'answer_user_avatar' => $answer->user->avatar ?? asset('images/default_avatar.png'),
+                        'answer_user_name' => $answer->user->name,
+                        'question_title' => $answer->question->title,
+                        'question_user_id' => $questionUserId,
+                        'answer_id' => $answerId,
+                        'question_id' => $answer->question->id,
+                        'page' => (int) ceil(Question::find($answer->question->id)->answers->where('id', '<=', $answerId)->count() / 5)
+                    ]));
+                }
+            }
             return response()->json(['response' => 1]);
         } else {
             response()->json(['response' => 0]);
@@ -221,7 +258,7 @@ class AnswerController extends Controller
         $this->validate($request, 
             [
                 'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
-                'audios.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
+                'audios.*' => 'mimetypes:audio/mpeg,video/webm,audio/ogg|max:3072'
             ]
         ); 
         if (!$request->content) {
@@ -377,6 +414,7 @@ class AnswerController extends Controller
     public function destroy($answerId) 
     {
         $answer = Answer::find($answerId);
+        $answer->content()->delete();
         $answer->delete();
         $answer->comments()->delete();
         if ($answer->question->best_answer_id == $answerId) {

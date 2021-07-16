@@ -45,6 +45,12 @@ class TagController extends AdminController
             $grid->disableActions();
         }
         $grid->disableCreateButton();
+        $grid->export(function ($export) {
+
+            $export->column('id', function ($value, $original) {
+                return $original;
+            });
+        });
 
         return $grid;
     }

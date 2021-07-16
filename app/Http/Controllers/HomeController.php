@@ -16,9 +16,9 @@ class HomeController extends Controller
 
     public function index()
     {
-        $newestQuestions = Question::with(['content', 'user', 'answers', 'tags'])->orderByDesc('id')->take(15)->get();
-        $unansweredQuestions = Question::with(['content', 'user', 'answers', 'tags'])->where('best_answer_id', null)->orderByDesc('id')->take(15)->get();
-        $votesQuestions = Question::with(['content', 'user', 'answers', 'tags'])->orderByDesc('vote_number')->take(15)->get();
+        $newestQuestions = Question::with(['content', 'user', 'answers', 'tags'])->where('status', 1)->orderByDesc('id')->take(15)->get();
+        $unansweredQuestions = Question::with(['content', 'user', 'answers', 'tags'])->where('status', 1)->where('best_answer_id', null)->orderByDesc('id')->take(15)->get();
+        $votesQuestions = Question::with(['content', 'user', 'answers', 'tags'])->where('status', 1)->orderByDesc('vote_number')->take(15)->get();
         $topUsers = User::orderByDesc('points')->take(10)->get();
         $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 

@@ -12,3 +12,14 @@
     background-color: #d1e5f1; 
     border-color: transparent;
 }
+.collection-tag {
+    margin-right: 5px;
+    color: #39739d; 
+    background-color: #f2f9ff; 
+    border: 1px solid #379fef;
+	border-radius: 3px;
+    &:hover {
+        color: #0064bd;
+        background: #f2f9ff;
+    }
+}

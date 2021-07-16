@@ -229,6 +229,12 @@
                 </div>
             </div>
             <aside class="col-md-4 sidebar">
+                <div class="widget widget_tag_cloud">
+                    <h3 class="widget_title">Hottest Tags</h3>
+                    @foreach ($topTags as $tag)
+                            <a style="color: #2c5777 !important" class="home-tag" href="http://localhost:8000/questions/view/[{{ $tag->tag }}]/newest#tab-top">{{ $tag->tag }}</a>
+                    @endforeach
+                </div>
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
@@ -283,6 +289,7 @@
                         </div>
                     </form>
                 </div>
+                
                 <div class="widget">
                     <h3 class="widget_title">Voice Recorder Tool</h3>
                     <div id='gUMArea'>
@@ -301,17 +308,7 @@
                         <ul class="list-unstyled" id='ul'></ul>
                     </div>
                 </div>
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Hottest Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
-                </div>
+                
             </aside>
         </div>
     </section>

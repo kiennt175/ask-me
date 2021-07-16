@@ -16,6 +16,6 @@ Route::group([
     $router->resource('manage/questions', QuestionController::class);
     $router->resource('manage/answers', AnswerController::class);
     $router->resource('manage/comments', CommentController::class);
-    $router->get('/analysis', 'ChartjsController@index');
+    $router->get('/dashboard', 'ChartjsController@index');
     $router->get('/', 'ChartjsController@index');
 });

@@ -19,7 +19,7 @@ class SocialLoginController extends Controller
  
     public function callback($provider)
     {
-        $userInfo = Socialite::driver($provider)->user();
+        $userInfo = Socialite::driver($provider)->stateless()->user();
         $existingUser = User::where('email', $userInfo->email)->first();
         if (!$existingUser) {
             // Have no account

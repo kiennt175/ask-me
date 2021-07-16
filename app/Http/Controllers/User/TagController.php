@@ -24,8 +24,9 @@ class TagController extends Controller
         $totalTags = Tag::all()->count();
         $totalQuestions = Question::all()->count();
         $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-        return view('tags', compact(['tags', 'tab', 'totalTags', 'totalQuestions', 'topUsers']));
+        return view('tags', compact(['tags', 'tab', 'totalTags', 'totalQuestions', 'topUsers', 'topTags']));
     }
 
     public function search($searchText, $tab)
@@ -41,7 +42,8 @@ class TagController extends Controller
         }
         $totalTags = Tag::where('tag', 'like', '%' . $searchText . '%')->count();
         $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-        return view('tags', compact(['tags', 'tab', 'searchText', 'totalTags', 'topUsers']));
+        return view('tags', compact(['tags', 'tab', 'searchText', 'totalTags', 'topUsers', 'topTags']));
     }
 }

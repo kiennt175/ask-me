@@ -13,10 +13,10 @@ $(document).ready(function () {
         if (e.key === 'Enter' || e.keyCode === 13) {
             var searchText = $('#search').val().trim();
             if (searchText[0] == '[' && searchText[String(searchText).length - 1] == ']') {
-                window.location.href = 'http://localhost:8000/questions/view/' + searchText + '/newest#question-search';
+                window.location.href = 'http://localhost:8000/questions/view/' + searchText + '/newest#tab-top';
             } else {
                 if (searchText) {
-                    window.location.href = 'http://localhost:8000/questions/view/' + searchText + '/relevance#question-search';
+                    window.location.href = 'http://localhost:8000/questions/view/' + searchText + '/relevance#tab-top';
                 }
             }
         }

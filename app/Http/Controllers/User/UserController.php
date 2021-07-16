@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Content;
 use App\Models\Tag;
+use App\Models\Follow;
 use App\Models\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,13 +23,31 @@ use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
+    public function followers($userId) {
+        $followers = Follow::where('followable_id', $userId)->where('followable_type', 'App\Models\User')->paginate(66);
+        $totalFollowers = Follow::where('followable_id', $userId)->where('followable_type', 'App\Models\User')->count();
+
+        return view('followers', compact(['followers', 'totalFollowers']));
+    }
+
+    public function answers($userId) {
+        $user = User::find($userId);
+        $answers = Answer::with(['content', 'comments'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10);
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $totalAnswers = $user->answers->count();
+        $totalBestAnswers = Question::whereIn('best_answer_id', $user->answers->pluck('id')->toArray())->count();
+
+        return view('user_answers', compact(['answers', 'user', 'topTags', 'totalAnswers', 'totalBestAnswers']));
+    }
+
     public function show($userId)
     {
         $user = User::with(['questions', 'answers'])->where('id', $userId)->first();
         $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
         $checkFollowUser = DB::table('follows')->where('followable_id', $userId)->where('followable_type', 'App\Models\User')->where('model_id', Auth::id())->count();
+        $totalFollowers = $user->follows->count();
 
-        return view('user_profile', compact(['checkFollowUser', 'user', 'topTags']));
+        return view('user_profile', compact(['checkFollowUser', 'user', 'topTags', 'totalFollowers']));
     }
 
     public function showBy($username)
@@ -36,8 +55,9 @@ class UserController extends Controller
         $user = User::with(['questions', 'answers'])->where('username', $username)->first();
         $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
         $checkFollowUser = DB::table('follows')->where('followable_id', $userId)->where('followable_type', 'App\Models\User')->where('model_id',  Auth::id())->count();
+        $totalFollowers = $user->follows->count();
 
-        return view('user_profile', compact(['checkFollowUser', 'user', 'topTags']));
+        return view('user_profile', compact(['checkFollowUser', 'user', 'topTags', 'totalFollowers']));
     }
 
     public function edit()
@@ -162,8 +182,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $questions = Question::with(['content', 'tags', 'answers.content'])->where('user_id', $user->id)->where('status', 1)->orderBy('created_at', 'desc')->paginate(10);
-        
-        return view('newsfeed', compact(['questions', 'user']));
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $totalQuestions = $user->questions->where('status', 1)->count();
+
+        return view('newsfeed', compact(['questions', 'user', 'topTags', 'totalQuestions']));
     }
 
     public function view($tab)
@@ -177,8 +199,11 @@ class UserController extends Controller
         if ($tab == 'newest') {
             $users = User::orderBy('id', 'desc')->paginate(66);
         }
-        
-        return view('users', compact(['users', 'tab']));
+        $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $totalUsers = User::all()->count();
+
+        return view('users', compact(['users', 'tab', 'topUsers', 'topTags', 'totalUsers']));
     }
 
     public function search($searchText, $tab)
@@ -192,8 +217,11 @@ class UserController extends Controller
         if ($tab == 'newest') {
             $users = User::where('name', 'like', '%' . $searchText . '%')->orWhere('username', 'like', '%' . $searchText . '%')->orderBy('id', 'desc')->paginate(66);
         }
+        $totalUsers = $users->count();
+        $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-        return view('users', compact(['users', 'tab', 'searchText']));
+        return view('users', compact(['users', 'tab', 'searchText', 'totalUsers', 'topUsers', 'topTags']));
     }
 
     public function saveQuestion($questionId)

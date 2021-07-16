@@ -55,6 +55,12 @@ class AnswerController extends AdminController
             $grid->disableActions();
         }
         $grid->disableCreateButton();
+        $grid->export(function ($export) {
+
+            $export->column('id', function ($value, $original) {
+                return html_entity_decode(strip_tags($original));
+            });
+        });
 
         return $grid;
     }

@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="shortcut icon" href="{{ asset('bower_components/askme-style/images/favicon.png') }}">
-    <title>404 Not Found</title>
+    <title>404 Not Found | ASK Me</title>
 
     @section('style')
         <link rel="stylesheet" href="{{ asset('bower_components/askme-style/style.css') }}">

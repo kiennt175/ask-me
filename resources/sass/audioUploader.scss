@@ -1,10 +1,9 @@
-//variables
+// variables
 $file-uploader__primaryColor: rgb(114, 191, 167);
 $file-uploader__primaryColor--hover: lighten($file-uploader__primaryColor, 15%);
 $file-uploader__black: #242424;
 $file-uploader__error: rgb(214, 93, 56);
-
-//style
+// style
 .file-uploader {
     background-color: lighten($file-uploader__primaryColor, 30%);
     border-radius: 3px;
@@ -59,8 +58,7 @@ $file-uploader__error: rgb(214, 93, 56);
         padding-top: 1em;
     }
 }
-
-//layout
+// layout
 .file-uploader {
     max-width: 400px;
     height: auto;
@@ -108,14 +106,11 @@ $file-uploader__error: rgb(214, 93, 56);
         background-color: $file-uploader__primaryColor--hover;
     }
 }
-
-//layout
+// layout
 .file-uploader {
     @extend %clearfix;
 }
-
-//utility
-
+// utility
 %clearfix {
     &:after {
         content: "";
@@ -133,8 +128,7 @@ $file-uploader__error: rgb(214, 93, 56);
   background-color: $file-uploader__error;
   color: white;
 }
-
-//reset
+// reset
 *,
 *::before,
 *::after {
@@ -145,7 +139,6 @@ li {
     margin: 0;
     padding: 0;
 }
-
 // media-block
 .media-block {
     display: flex;
@@ -153,23 +146,17 @@ li {
     margin-top: -47px;
 }
 .media {
-    // float: right;
     width: 580px;
     float: left;
     margin-left: 20px;
-    // margin-top: -52px;
-    // flex-wrap: wrap;
 }
 .add-more-media-form {
-    // background: #f2f9ff;
-    // margin-left: -10px;
-    border-radius: 10px;
+    border-radius: 3px;
     border: 1px solid #c4c4c4;
     width: 301px;
 }
 .audio {
     margin-bottom: 10px !important;
-    // margin-right: 50px;
 }
 .add-media {
     margin-top: 20px !important;

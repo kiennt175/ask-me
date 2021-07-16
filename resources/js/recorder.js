@@ -21,7 +21,7 @@ $(document).ready(function () {
         mt.controls = true;
         mt.src = url;
         hf.href = url;
-        hf.download = `${counter++}${media.ext}`;
+        hf.download = `${counter++}`;
         hf.innerHTML = `ClickToSave${hf.download}`;
         hf.style = "font-size:14px; font-weight: 600; margin-left: 10px";
         li.style = "margin-bottom: 10px";

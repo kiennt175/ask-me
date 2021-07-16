@@ -46,7 +46,10 @@ class ScheduleQuestion extends Command
         $scheduleQuestions = Question::with('user')->where('schedule_time', '<=', Carbon::now())
         ->where('status', 0)
         ->get();
-        $scheduleQuestions->each->update(['status' => 1]);
+        $scheduleQuestions->each->update([
+            'status' => 1,
+            'created_at' => Carbon::now()
+        ]);
 
         foreach ($scheduleQuestions as $scheduleQuestion) {
             // add to index ES
