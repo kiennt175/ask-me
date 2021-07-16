@@ -1,10 +1,18 @@
-<div class="chart-container" style="height:300px; width:580px; display:flex; margin-bottom: 50px">
+<div style="display: flex; justify-content: space-between;">
+   <div style="width: 19%">@php echo $userBox; @endphp</div>
+   <div style="width: 19%">@php echo $questionBox; @endphp</div>
+   <div style="width: 19%">@php echo $tagBox; @endphp</div>
+   <div style="width: 19%">@php echo $answerBox; @endphp</div>
+   <div style="width: 19%">@php echo $commentBox; @endphp</div>
+</div>
+<br><br>
+<div class="chart-container" style="height:300px; width:50%; display:flex; margin-bottom: 50px">
     <canvas id="users-chart" style="margin-right: 10px"></canvas>
     <canvas id="tags-chart"></canvas>
 </div>
-<div class="chart-container" style="height:300px; width:580px; display:flex;">
-    <canvas id="er-chart" style="margin-right: 10px"></canvas>
+<div class="chart-container" style="height:300px; width:50%; display:flex;">
     <canvas id="question-chart"></canvas>
+    <canvas id="er-chart" style="margin-right: 10px"></canvas>
 </div>
 <script>
     $(function () {
@@ -14,23 +22,22 @@
             data: {
                 labels: @json($userLabels),
                 datasets: [{
-                    label: 'users',
-                    data: @json($userData),
+                    label: 'total users',
+                    // data: @json($userData),
+                    data: [
+                        50,
+                        60,
+                        90,
+                        120,
+                        170,
+                        200,
+                        220
+                    ],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
                     ],
                     borderColor: [
                         'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
                     ],
                     borderWidth: 1
                 }]
@@ -45,7 +52,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'so luong user tang len 7 ngay gan nhat'
+                    text: 'Users'
                 }
             }
         });
@@ -60,16 +67,26 @@
                 labels: @json($tagLabels),
                 datasets: [{
                     label: 'My First Dataset',
-                    data: @json($tagData),
+                    // data: @json($tagData),
+                    data: [
+                        50,
+                        90,
+                        150,
+                        300,
+                        200,
+                        400,
+                        1000,
+                        1200
+                    ],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
                         'rgb(255, 205, 86)',
+                        '#22CFCF',
+                        '#9966FF',
+                        '#A1CECE',
                         '#8ddae8',
-                        '#063970',
-                        '#873e23',
-                        '#1c100b',
-                        'green',
+                        '#FF9F40',
                     ],
                     hoverOffset: 4
                 }]
@@ -77,7 +94,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Tags Chart'
+                    text: 'Tags'
                 }
             }
         });
@@ -90,88 +107,49 @@
             type: 'line',
             data: {
                 labels: @json($userLabels),
-                datasets: [{
-                    label: 'engagement rate (%)',
-                    fill: false,
-                    data: @json($erData),
-                    // backgroundColor: [
-                    //     'rgba(75, 192, 192, 0.2)'
-                    // ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                },
-                title: {
-                    display: true,
-                    text: 'Engagement Chart'
-                }
-            }
-        });
-    });
-</script>
-<script>
-    $(function () {
-        var ctx = document.getElementById("question-chart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @json($userLabels),
                 datasets: [
                     {
-                        label: 'tongTonDong',
-                        data: @json($tongTonDong),
+                        label: 'engagement rate (%)',
+                        fill: false,
+                        // data: @json($erData),
+                        data: [
+                            50,
+                            90,
+                            120,
+                            100,
+                            90,
+                            130,
+                            150
+                        ],
                         backgroundColor: [
-                            '#9CD0F5',
-                            '#9CD0F5',
-                            '#9CD0F5',
-                            '#9CD0F5',
-                            '#9CD0F5',
-                            '#9CD0F5',
-                            '#9CD0F5',
+                            '#DBF2F2'
                         ],
                         borderColor: [
-                            '#36A2EC',
-                            '#36A2EC',
-                            '#36A2EC',
-                            '#36A2EC',
-                            '#36A2EC',
-                            '#36A2EC',
-                            '#36A2EC',
+                            '#4BC0C0',
                         ],
-                        borderWidth: 1
+                        borderWidth: 2
                     },
                     {
-                        label: 'tongCauHoiGiaiQuyetTrongNgay',
-                        data: @json($tongCauHoiGiaiQuyetTrongNgay),
+                        label: 'normal efficiency (%)',
+                        fill: false,
+                        // data: @json($erData),
+                        data: [
+                            100,
+                            100,
+                            100,
+                            100,
+                            100,
+                            100,
+                            100,
+                        ],
+                        pointRadius: 0,
                         backgroundColor: [
-                            '#FEE7AC',
-                            '#FEE7AC',
-                            '#FEE7AC',
-                            '#FEE7AC',
-                            '#FEE7AC',
-                            '#FEE7AC',
-                            '#FEE7AC',
+                            '#FFE0E6'
                         ],
                         borderColor: [
-                            '#FFCD57',
-                            '#FFCD57',
-                            '#FFCD57',
-                            '#FFCD57',
-                            '#FFCD57',
-                            '#FFCD57',
-                            '#FFCD57',
+                            '#FF6384',
                         ],
-                        borderWidth: 1
+                        borderWidth: 2
                     }
                 ]
             },
@@ -185,7 +163,97 @@
                 },
                 title: {
                     display: true,
-                    text: 'Engagement Chart'
+                    text: 'Engagement'
+                },
+            }
+        });
+    });
+</script>
+<script>
+    $(function () {
+        var ctx = document.getElementById("question-chart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($userLabels),
+                datasets: [
+                    {
+                        label: 'total questions of the day',
+                        // data: @json($tongTonDong),
+                        data: [
+                            50,
+                            60,
+                            70,
+                            65,
+                            80,
+                            100,
+                            75
+                        ],
+                        backgroundColor: [
+                            '#9CD0F5',
+                            '#9CD0F5',
+                            '#9CD0F5',
+                            '#9CD0F5',
+                            '#9CD0F5',
+                            '#9CD0F5',
+                            '#9CD0F5',
+                        ],
+                        borderColor: [
+                            '#36A2EC',
+                            '#36A2EC',
+                            '#36A2EC',
+                            '#36A2EC',
+                            '#36A2EC',
+                            '#36A2EC',
+                            '#36A2EC',
+                        ],
+                        borderWidth: 0
+                    },
+                    {
+                        label: 'total resolved questions of the day',
+                        // data: @json($tongCauHoiGiaiQuyetTrongNgay),
+                        data: [
+                            15,
+                            15,
+                            35,
+                            10,
+                            40,
+                            30,
+                            20
+                        ],
+                        backgroundColor: [
+                            '#FEE7AC',
+                            '#FEE7AC',
+                            '#FEE7AC',
+                            '#FEE7AC',
+                            '#FEE7AC',
+                            '#FEE7AC',
+                            '#FEE7AC',
+                        ],
+                        borderColor: [
+                            '#FFCD57',
+                            '#FFCD57',
+                            '#FFCD57',
+                            '#FFCD57',
+                            '#FFCD57',
+                            '#FFCD57',
+                            '#FFCD57',
+                        ],
+                        borderWidth: 0
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Questions'
                 }
             }
         });

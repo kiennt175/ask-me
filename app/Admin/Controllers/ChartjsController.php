@@ -15,35 +15,15 @@ use App\Models\Comment;
 use App\Models\Answer;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Encore\Admin\Admin;
+use Encore\Admin\Widgets\InfoBox;
+
+Admin::style('.main-footer strong {display: none} .main-footer .pull-right {display: none}');
 
 class ChartjsController extends Controller
 {
     public function index(Content $content)
     {   
-        // user chart
-        // $dates = collect();
-        // foreach( range( -6, 0 ) AS $i ) {
-        //     $date = Carbon::now()->addDays( $i )->format( 'Y-m-d' );
-        //     $dates->put( $date, 0);
-        // }
-        // Get the post counts
-        // $questions = Question::where( 'created_at', '>=', $dates->keys()->first() )
-        //     ->groupBy( 'date' )
-        //     ->orderBy( 'date' )
-        //     ->get( [
-        //         DB::raw( 'DATE( created_at ) as date' ),
-        //         DB::raw( 'COUNT( * ) as "count"' )
-        //     ] )
-        //     ->pluck( 'count', 'date' );
-        // Merge the two collections; any results in `$posts` will overwrite the zero-value in `$dates`
-        // $dates = $dates->merge( $questions )->toArray();
-        // $userLabels = array_keys($dates);
-        // $userLabels = array_map(function($item){
-
-        //     return date("d/m", strtotime($item));
-        // }, $userLabels);
-        // $userData = array_values($dates);
-
         // tags chart
         $tags = Tag::withCount('questions')->get()->toArray();
         $tagTotal = count($tags);
@@ -123,7 +103,7 @@ class ChartjsController extends Controller
         // ER
         $erData = [];
         for ($i = 0; $i < 7; $i++) {
-            $erData[$i] = ($erTotalVotes[$i] + $erTotalComments[$i] + $erTotalAnswers[$i]) / ($erTotalQuestions[$i] * $erTotalUsers[$i]);
+            $erData[$i] = ($erTotalVotes[$i] + $erTotalComments[$i] + $erTotalAnswers[$i]) / ($erTotalQuestions[$i] * $erTotalUsers[$i]) * 100;
             $erData[$i] = number_format($erData[$i], 2, '.', '');
         };
 
@@ -145,9 +125,21 @@ class ChartjsController extends Controller
         $tongTonDong[6] = $erQuestions->where('best_answer_id', '==', null)->count();
         $tongCauHoiGiaiQuyetTrongNgay[6] = $erQuestions->whereBetween('solved_at', [Carbon::today()->toDateString(), Carbon::today()->addDay(1)->toDateString()])->count();
         
+        // infoBox
+        // $userBox = new InfoBox('Total Users', 'users', 'aqua', '/admin/manage/users', User::all()->count());
+        $userBox = new InfoBox('Users', 'users', 'aqua', '/admin/manage/users', 220);
+        // $questionBox = new InfoBox('Total Questions', 'question-circle', 'green', '/admin/manage/questions', Question::all()->count());
+        $questionBox = new InfoBox('Questions', 'question-circle', 'green', '/admin/manage/questions', 175);
+        $tagBox = new InfoBox('Tags', 'tags', 'yellow', '/admin/manage/tags', Tag::all()->count());
+        // $answerBox = new InfoBox('Total Answers', 'reply-all', 'red', '/admin/manage/answers', Answer::all()->count());
+        $answerBox = new InfoBox('Answers', 'reply-all', 'red', '/admin/manage/answers', 67);
+        // $commentBox = new InfoBox('Total Comments', 'comments', 'pink', '/admin/manage/comments', Comment::all()->count());
+        $commentBox = new InfoBox('Comments', 'comments', 'teal', '/admin/manage/comments', 127);
+
         return $content
-            ->header('Analysis')
-            ->body(new Box('', view('admin.chartjs', [
+            ->header('Dashboard')
+            ->body(
+                new Box('', view('admin.chartjs', [
                 'userLabels' => $userLabels, 
                 'userData' => $erTotalUsers,
                 'tagLabels' => $tagLabels,
@@ -155,6 +147,11 @@ class ChartjsController extends Controller
                 'erData' => $erData,
                 'tongTonDong' => $tongTonDong,
                 'tongCauHoiGiaiQuyetTrongNgay' => $tongCauHoiGiaiQuyetTrongNgay,
+                'userBox' => $userBox,
+                'questionBox' => $questionBox,
+                'tagBox' => $tagBox,
+                'answerBox' => $answerBox,
+                'commentBox' => $commentBox,
             ])));
     }
 }

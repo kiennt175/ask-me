@@ -6,19 +6,36 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Content;
 use App\Models\Media;
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
+use App\Events\ShowQuestion; // count view
 
 class QuestionController extends Controller
 {
+    public function elasticsearchDSL($searchText, $fields) {
+        return [
+            'body' => [
+                'query' => [
+                    'multi_match' => [
+                        'query' => $searchText,
+                        'fields' => $fields,
+                        'fuzziness' => 'AUTO'
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function show($id)
-    {
+    {   
         $question = Question::with(['images', 'medias', 'votes', 'content', 'user', 'tags', 'answers.comments.user', 'answers.user', 'answers.votes', 'answers.content', 'answers.conversation', 'answers.comments.user'])->where('id', $id)->first();
         $answers = Answer::with(['images', 'medias', 'user', 'comments.user'])->where('question_id', $id)->paginate(5);
         $votedCheck = $question->votes->where('user_id', Auth::id())->first();
@@ -43,8 +60,44 @@ class QuestionController extends Controller
             }
         }
         $sortBy = 'oldest';
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $relatedTitles = Question::complexSearch($this->elasticsearchDSL($question->title, ['title']))->getHits()['hits'];
+        $relatedContents = Content::complexSearch($this->elasticsearchDSL($question->content->content, ['content']))->getHits()['hits'];
+        $idsTitle = array_map(function($item){
+            return (int) $item['_id'];
+        }, $relatedTitles);
+        $idsContent = array_map(function($item){
+            if ($item['_source']['contentable_type'] == "App\Models\Question") return (int) $item['_source']['contentable_id'];
+        }, $relatedContents);
+        $ids = array_unique(
+            array_merge($idsTitle, $idsContent)
+        );
+        $ids = array_filter($ids);
+        if ($ids != []) {
+            $relatedQuestions = Question::with(['user', 'content'])->whereIn('id', $ids)->orderByRaw(DB::raw(sprintf('FIELD(id, %s)', implode(',', $ids))))->skip(1)->take(5)->get();
+        } else {
+            $relatedQuestions = collect(new Question);
+        }
+        if (Auth::check()) {
+            $saveQuestion = DB::table('saves')->where('user_id', Auth::id())->where('question_id', $question->id)->count();
+            $saveQuestion = $saveQuestion || DB::table('collections')
+                ->join('collection_question', 'collections.id', '=', 'collection_question.collection_id')
+                ->where('user_id', Auth::id())
+                ->where('question_id', $question->id)
+                ->count();
+            $collections = Auth::user()->collections;
+            if ($question->status == 1) event(new ShowQuestion($question));
+            // check follow author
+            $checkFollowAuthor = DB::table('follows')->where('followable_id', $question->user->id)->where('followable_type', 'App\Models\User')->where('model_id', Auth::id())->count();
+            $checkFollowQuestion = DB::table('follows')->where('followable_id', $question->id)->where('followable_type', 'App\Models\Question')->where('model_id', Auth::id())->count();
+            
+            return view('question_details', compact(['checkFollowQuestion', 'checkFollowAuthor', 'collections', 'saveQuestion', 'relatedQuestions', 'topTags', 'question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+        } else {
+            $saveQuestion = 0;
+            if ($question->status == 1) event(new ShowQuestion($question));
 
-        return view('question_details', compact(['question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+            return view('question_details', compact(['relatedQuestions', 'topTags', 'question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+        }
     }
 
     public function showBy($id, $sortBy)
@@ -73,8 +126,44 @@ class QuestionController extends Controller
                 array_push($answerVotedCheck, 1);
             }
         }
-
-        return view('question_details', compact(['question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+        $relatedTitles = Question::complexSearch($this->elasticsearchDSL($question->title, ['title']))->getHits()['hits'];
+        $relatedContents = Content::complexSearch($this->elasticsearchDSL($question->content->content, ['content']))->getHits()['hits'];
+        $idsTitle = array_map(function($item){
+            return (int) $item['_id'];
+        }, $relatedTitles);
+        $idsContent = array_map(function($item){
+            if ($item['_source']['contentable_type'] == "App\Models\Question") return (int) $item['_source']['contentable_id'];
+        }, $relatedContents);
+        $ids = array_unique(
+            array_merge($idsTitle, $idsContent)
+        );
+        $ids = array_filter($ids);
+        if ($ids != []) {
+            $relatedQuestions = Question::with(['user', 'content'])->whereIn('id', $ids)->orderByRaw(DB::raw(sprintf('FIELD(id, %s)', implode(',', $ids))))->skip(1)->take(5)->get();
+        } else {
+            $relatedQuestions = collect(new Question);
+        }
+        if (Auth::check()) {
+            $saveQuestion = DB::table('saves')->where('user_id', Auth::id())->where('question_id', $question->id)->count();
+            $saveQuestion = $saveQuestion || DB::table('collections')
+                ->join('collection_question', 'collections.id', '=', 'collection_question.collection_id')
+                ->where('user_id', Auth::id())
+                ->where('question_id', $question->id)
+                ->count();
+            $collections = Auth::user()->collections;
+            if ($question->status == 1) event(new ShowQuestion($question));
+            // check follow author
+            $checkFollowAuthor = DB::table('follows')->where('followable_id', $question->user->id)->where('followable_type', 'App\Models\User')->where('model_id', Auth::id())->count();
+            $checkFollowQuestion = DB::table('follows')->where('followable_id', $question->id)->where('followable_type', 'App\Models\Question')->where('model_id', Auth::id())->count();
+            
+            return view('question_details', compact(['checkFollowQuestion', 'checkFollowAuthor', 'collections', 'saveQuestion', 'relatedQuestions', 'topTags', 'question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+        } else {
+            $saveQuestion = 0;
+            if ($question->status == 1) event(new ShowQuestion($question));
+            
+            return view('question_details', compact(['relatedQuestions', 'topTags', 'question', 'answers', 'votedCheck', 'answerUserIds', 'answerUserNames', 'answerUserAvatars', 'answerContents', 'answerConversations', 'answerVotedCheck', 'answerIds', 'sortBy']));
+        }
     }
 
     public function vote($id)
@@ -116,6 +205,10 @@ class QuestionController extends Controller
         $question = Question::where('id', $questionId)->first();
         $question->update([
             'best_answer_id' => $request->answerId,
+        ]);
+        $answerAuthor = Answer::find($request->answerId)->user;
+        $answerAuthor->update([
+            'points' => $answerAuthor->points + 10
         ]);
         if ($question->solved_at == null) {
             $question->update([
@@ -211,8 +304,12 @@ class QuestionController extends Controller
             $question->content()->delete();
 
             // xoa question
-            $question->delete();
+            $question->forceDelete();
+
+            // reindex ES
+            Question::reindex();
         });
+        DB::table('notifications')->where('data->question_id', $questionId)->delete();
 
         return response()->json(['response' => 1]);
     }
@@ -225,19 +322,20 @@ class QuestionController extends Controller
         foreach ($question->images as $image) {
             array_push($images, ['id' => $image->id, 'src' => $image->url]);
         }
-        // dd($question->medias->pluck('url', 'id'));
         $medias = $question->medias;
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-        return view('edit_question', compact(['question', 'tags', 'images', 'medias']));
+        return view('edit_question', compact(['question', 'tags', 'images', 'medias', 'topTags']));
     }
     public function update(Request $request, $questionId) 
     {   
+        // dd('hello');
         $this->validate($request, 
             [
                 'title' => ['required', 'string', 'max:255'],
                 'tags' => ['required'],
                 'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
-                'audios.*' => 'mimetypes:audio/mpeg,video/webm|max:3072'
+                'audios.*' => 'mimetypes:audio/mpeg,video/webm,audio/ogg|max:3072'
             ]
         ); 
         if (!$request->content) {
@@ -250,6 +348,10 @@ class QuestionController extends Controller
                 'title' => $request->title,
                 'updated' => 1
             ]);
+            
+            // $question->updateIndex();
+            Question::reindex();
+            //$question->addToIndex();
 
             // save tags
             // them cac tags moi vao bang tags
@@ -293,8 +395,8 @@ class QuestionController extends Controller
             if ($request->oldImageIds && $request->oldImageIds != $allImageIds) {
                 // lay images cần xoá
                 $oldImageIds = [];
-                foreach ($request->oldImageIds as $oldImageId) {
-                    if ($oldImageId == 0) {
+                foreach ($request->oldImageIds as $key => $oldImageId) {
+                    if ($key - 1 >= 0 && $request->oldImageIds[$key] < $request->oldImageIds[$key-1]) {
                         break;
                     } else {
                         array_push($oldImageIds, $oldImageId);
@@ -315,8 +417,10 @@ class QuestionController extends Controller
             }
 
             // add new images
-
+            // dd($request->photos, $request->imgUrls);
+            // dd($request->photos);
             if ($request->photos) {
+                // dd($request->photos);
                 foreach ($request->photos as $image) {
                     if (in_array($image->getClientOriginalName(), array_filter(explode(",", $request->imgUrls)))) {
                         $imageName = time() . '_' . $image->getClientOriginalName();
@@ -368,67 +472,158 @@ class QuestionController extends Controller
 
     public function view()
     {
-        $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('id')->get();
-        
-        return view('questions', compact('questions'));
+        $questions = Question::with(['content', 'user', 'answers', 'tags'])->where('status', 1)->orderByDesc('id')->paginate(15);
+        $totalQuestions = Question::all()->where('status', 1)->count();
+        $totalAnswers = Answer::all()->count();
+        $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
+
+        return view('questions', compact(['questions', 'totalQuestions', 'totalAnswers', 'topUsers', 'topTags']));
+    }
+
+    public function searchByTitleAndContent($searchText)
+    {
+        $titleSearch = Question::complexSearch($this->elasticsearchDSL($searchText, ['title']))->getHits()['hits'];
+        $contentSearch = Content::complexSearch($this->elasticsearchDSL($searchText, ['content']))->getHits()['hits'];
+        $idsTitle = array_map(function($item){
+            return (int) $item['_id'];
+        }, $titleSearch);
+        $idsContent = array_map(function($item){
+            if ($item['_source']['contentable_type'] == "App\Models\Question") return (int) $item['_source']['contentable_id'];
+        }, $contentSearch);
+        $ids = array_unique(
+            array_merge($idsTitle, $idsContent)
+        );
+        $ids = array_filter($ids);
+
+        return $ids;
     }
 
     public function viewByTab($searchText, $tab)
     {
-
-
+        $topUsers = User::orderByDesc('points')->take(10)->get();
+        $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
         if ($searchText == 'noSearching') {
-            if ($tab == 'unanswered') {
-                $questions = Question::with(['content', 'user', 'answers'])->where('best_answer_id', null)->orderByDesc('id')->get();
+            if ($tab == 'newest') {
+                $questions = Question::with(['content', 'user', 'answers'])->where('status', 1)->orderByDesc('id')->paginate(15);
+                $totalQuestions = Question::all()->where('status', 1)->count();
+            }
+            if ($tab == 'unsolved') {
+                $questions = Question::with(['content', 'user', 'answers'])->where('status', 1)->where('best_answer_id', null)->orderByDesc('id')->paginate(15);
+                $totalQuestions = Question::all()->where('status', 1)->where('best_answer_id', null)->count();
             } 
             if ($tab == 'votes') {
-                $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('vote_number')->get();
+                $questions = Question::with(['content', 'user', 'answers'])->where('status', 1)->orderByDesc('vote_number')->paginate(15);
+                $totalQuestions = Question::all()->where('status', 1)->count();
             }
-            if ($tab == 'newest') {
-                $questions = Question::with(['content', 'user', 'answers'])->orderByDesc('id')->get();
-            }
+            $totalAnswers = Answer::all()->count();
+            // $topUsers = User::orderByDesc('points')->take(10)->get();
+            // $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-            return view('questions', compact('questions', 'tab'));
+            return view('questions', compact(['questions', 'tab', 'totalQuestions', 'totalAnswers', 'topUsers', 'topTags']));
         } else {
-            
-
-            if ($tab == 'unanswered') {
-                $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->where('best_answer_id', null)->orderByDesc('id')->get();
-            } 
-            if ($tab == 'votes') {
-                $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('vote_number')->get();
+            if ($searchText[0] == '[' && $searchText[-1] == ']') {
+                if ($tab == 'newest') {
+                    $searchTag = substr($searchText, 0, -1);
+                    $searchTag = substr($searchTag, 1);
+                    $tags = explode(",", $searchTag);
+                    $questions = DB::table('questions')
+                        ->join('question_tag', 'questions.id', '=', 'question_tag.question_id')
+                        ->join('tags', 'tags.id', '=', 'question_tag.tag_id')
+                        ->select(DB::raw('questions.id, count(tag_id) as tag_count'))
+                        ->where('tag', 'like', '%' . $tags[0] . '%')
+                        ->where('status', 1);
+                    if (isset($tags[1])) {
+                        for ($i=1; $i<count($tags); $i++) {
+                            $questions = $questions->orWhere('tag', 'like', '%' . $tags[$i] . '%');
+                        }
+                        $questions = $questions->groupBy('questions.id')->having('tag_count', '>', 1)->get();
+                    } else {
+                        $questions = $questions->groupBy('questions.id')->get();
+                    }
+                    $ids = Arr::flatten($questions->pluck('id'));
+                    $questions = Question::whereIn('id', $ids)->orderByDesc('id')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->count();
+                }
+                if ($tab == 'unsolved') {
+                    $searchTag = substr($searchText, 0, -1);
+                    $searchTag = substr($searchTag, 1);
+                    $tags = explode(",", $searchTag);
+                    $questions = DB::table('questions')
+                        ->join('question_tag', 'questions.id', '=', 'question_tag.question_id')
+                        ->join('tags', 'tags.id', '=', 'question_tag.tag_id')
+                        ->select(DB::raw('questions.id, count(tag_id) as tag_count'))
+                        ->where('tag', 'like', '%' . $tags[0] . '%')
+                        ->where('status', 1);
+                    if (isset($tags[1])) {
+                        for ($i=1; $i<count($tags); $i++) {
+                            $questions = $questions->orWhere('tag', 'like', '%' . $tags[$i] . '%');
+                        }
+                        $questions = $questions->groupBy('questions.id')->having('tag_count', '>', 1)->get();
+                    } else {
+                        $questions = $questions->groupBy('questions.id')->get();
+                    };
+                    $ids = Arr::flatten($questions->pluck('id'));
+                    $questions = Question::whereIn('id', $ids)->where('best_answer_id', null)->orderByDesc('id')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->where('best_answer_id', null)->count();
+                } 
+                if ($tab == 'votes') {
+                    $searchTag = substr($searchText, 0, -1);
+                    $searchTag = substr($searchTag, 1);
+                    $tags = explode(",", $searchTag);
+                    $questions = DB::table('questions')
+                        ->join('question_tag', 'questions.id', '=', 'question_tag.question_id')
+                        ->join('tags', 'tags.id', '=', 'question_tag.tag_id')
+                        ->select(DB::raw('questions.id, count(tag_id) as tag_count'))
+                        ->where('tag', 'like', '%' . $tags[0] . '%')
+                        ->where('status', 1);
+                    if (isset($tags[1])) {
+                        for ($i=1; $i<count($tags); $i++) {
+                            $questions = $questions->orWhere('tag', 'like', '%' . $tags[$i] . '%');
+                        }
+                        $questions = $questions->groupBy('questions.id')->having('tag_count', '>', 1)->get();
+                    } else {
+                        $questions = $questions->groupBy('questions.id')->get();
+                    };
+                    $ids = Arr::flatten($questions->pluck('id'));
+                    $questions = Question::whereIn('id', $ids)->orderByDesc('vote_number')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->count();
+                }
+            } else {
+                if ($tab == 'relevance') {
+                    $ids = $this->searchByTitleAndContent($searchText);
+                    $questions = Question::whereIn('id', $ids)->orderByRaw(DB::raw(sprintf('FIELD(id, %s)', implode(',', $ids))))->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->count();
+                }
+                if ($tab == 'newest') {
+                    $ids = $this->searchByTitleAndContent($searchText);
+                    $questions = Question::whereIn('id', $ids)->orderByDesc('id')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->count();
+                }
+                if ($tab == 'unsolved') {
+                    $ids = $this->searchByTitleAndContent($searchText);
+                    $questions = Question::whereIn('id', $ids)->where('best_answer_id', null)->orderByDesc('id')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->where('best_answer_id', null)->count();
+                } 
+                if ($tab == 'votes') {
+                    $ids = $this->searchByTitleAndContent($searchText);
+                    $questions = Question::whereIn('id', $ids)->orderByDesc('vote_number')->paginate(15);
+                    $totalQuestions = Question::whereIn('id', $ids)->count();
+                }
             }
-            if ($tab == 'newest') {
-                $results = Question::complexSearch([
-                    'body' => [
-                        'query' => [
-                            'multi_match' => [ // search cho nhieu truong 
-                                'query' => $searchText,
-                                'fields' => ['title'],
-                                'fuzziness' => 'AUTO' // search cac tu tuong dong nhau
-                            ]
-                        ]
-                    ]
-                ])->getHits()['hits'];
+            $totalAnswers = Answer::whereIn('question_id', $ids)->count();
+            // $topUsers = User::orderByDesc('points')->take(10)->get();
+            // $topTags = Tag::withCount('questions')->orderBy('questions_count', 'desc')->take(10)->get();
 
-                
-    
-                $ids = array_map(function($item){
-                    return (int) $item['_id'];
-                }, $results);
-    
-                $questions = Question::whereIn('id', $ids)->get();
-                //$questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('id')->get();
-            }
-
-            return view('questions', compact('questions', 'tab', 'searchText'));
+            return view('questions', compact(['questions', 'tab', 'searchText', 'totalQuestions', 'totalAnswers', 'topUsers', 'topTags']));
         }
     }
 
-    // public function search($searchText)
-    // {
-    //     $questions = Question::with(['content', 'user', 'answers'])->where('title', 'like', '%' . $searchText . '%')->orderByDesc('id')->get();
+    public function goToBestAns($questionId) {
+        $question = Question::find($questionId);
+        $bestAnsId = $question->best_answer_id;
+        $page = (int) ceil($question->answers->where('id', '<=', $bestAnsId)->count() / 5);
 
-    //     return response()->json(['response' => 1, 'questions' => $questions, 'searchText' => $searText]);
-    // }
+        return response()->json(['bestAnsId' => $bestAnsId, 'page' => $page]);
+    }
 }

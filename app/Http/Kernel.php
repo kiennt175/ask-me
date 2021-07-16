@@ -66,6 +66,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'password.new' => \App\Http\Middleware\NewPassword::class,
-        'question.edit' => \App\Http\Middleware\EditQuestion::class
+        'question.edit' => \App\Http\Middleware\EditQuestion::class,
+        'answer.edit' => \App\Http\Middleware\EditAnswer::class,
+        'question.pending' => \App\Http\Middleware\PendingQuestion::class
     ];
 }

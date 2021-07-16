@@ -11,8 +11,11 @@
     color: red;
 }
 .home {
-    color: red; 
-    text-decoration: none
+    color: #39739d; 
+    text-decoration: none;
+    &:hover {
+        color: #3598DB;
+    }
 }
 .tata .tata-text {
     color: white;

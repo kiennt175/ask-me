@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('bower_components/image-uploader/css/image-uploader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/audioUploader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/editQuestion.css') }}">
     <script>
         if (!document.addEventListener) {
             parent.location.href = 'ie8/type.html';
@@ -183,6 +184,19 @@
                                 <p>
                                     <label>Audio Files</label>
                                     <div class="media-block">
+                                        <div class="add-more-media">
+                                            {{-- <form method="post" class="file-uploader" action="" enctype="multipart/form-data"> --}}
+                                                <div class="add-more-media-form">
+                                                    <div class="file-uploader__message-area">
+                                                        <p>Select a file to upload</p>
+                                                    </div>
+                                                    <div class="file-chooser"> 
+                                                        <input class="file-chooser__input" type="file" accept="audio/mp3,audio/ogg,audio/wav">
+                                                    </div>
+                                                </div>
+                                                {{-- <input class="file-uploader__submit-button" type="submit" value="Upload">
+                                                </form> --}}
+                                        </div>
                                         @if ($medias->count() > 0)
                                             <div class="media">
                                                 @foreach ($medias as $media)
@@ -203,34 +217,28 @@
                                         {{-- @else  --}}
                                             {{-- <input type="file" name="medias[]" accept="audio/mp3,audio/ogg,audio/wav" multiple> --}}
                                         @endif
-                                        <div class="add-more-media">
-                                            {{-- <form method="post" class="file-uploader" action="" enctype="multipart/form-data"> --}}
-                                                <div class="add-more-media-form">
-                                                    <div class="file-uploader__message-area">
-                                                        <p>Select a file to upload</p>
-                                                    </div>
-                                                    <div class="file-chooser"> 
-                                                        <input class="file-chooser__input" type="file" accept="audio/mp3,audio/ogg,audio/wav">
-                                                    </div>
-                                                </div>
-                                                {{-- <input class="file-uploader__submit-button" type="submit" value="Upload">
-                                                </form> --}}
-                                        </div>
+                                        
                                     </div>
                                 </p>
                             </div>
 							<p class="form-submit">
-								<input type="submit" id="publish-question" value="Publish Your Question" class="button color small submit">
+								<input type="submit" id="publish-question" value="Update This Question" class="button color small submit">
 							</p>
 						</form>
                     </div>
                 </div>
             </div>
             <aside class="col-md-4 sidebar">
+                <div class="widget widget_tag_cloud">
+                    <h3 class="widget_title">Hottest Tags</h3>
+                    @foreach ($topTags as $tag)
+                            <a style="color: #2c5777 !important" class="home-tag" href="http://localhost:8000/questions/view/[{{ $tag->tag }}]/newest#tab-top">{{ $tag->tag }}</a>
+                    @endforeach
+                </div>
                 <div class="widget">
                     <h3 class="widget_title">IPA Tool</h3>
                     <form method="post" enctype="application/x-www-form-urlencoded" action="#">
-                        <input type="text" name="resultview" class="resvew" style="font-size: 16px">
+                        <input id="resultview" type="text" name="resultview" class="resvew" style="font-size: 16px">
                         <div id="formcontent">
                             <input type="text" id="result" class="res"/>
                             <input type="text" id="resultweb" class="res"/>
@@ -275,10 +283,13 @@
                             <input type="button" onclick="clearOne();" class="buact" value="Delete"/>
                             <input type="button" onclick="addSpace();" class="buact" value="Space"/>
                             <input type="button" onclick="clearAll();;" class="buact" value="Reset"/>
+                            <div style="margin-top: 5px"></div>
+                            <input id="copy-ipa" type="button" class="buact" value="Copy"/>
                             <br/><br/>
                         </div>
                     </form>
                 </div>
+                
                 <div class="widget">
                     <h3 class="widget_title">Voice Recorder Tool</h3>
                     <div id='gUMArea'>
@@ -297,22 +308,13 @@
                         <ul class="list-unstyled" id='ul'></ul>
                     </div>
                 </div>
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Hottest Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
-                </div>
+                
             </aside>
         </div>
     </section>
     <script>
         var content = '{!! $question->content->content !!}'
+        console.log(content);
     </script>
     <script src="{{ asset('js/editQuestion.js') }}"></script>
     <script>

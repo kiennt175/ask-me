@@ -44,3 +44,22 @@
 .points b {
     color: #30333A
 }
+.pagination {
+    display: flex;
+    float: right;
+}
+.pagination-user {
+    margin-top: -53px;
+}
+.users-block {
+    background: white;
+    padding: 20px;
+    margin-bottom: 30px;
+    color: #2f3239;
+    border: 1px solid #dedede;
+    box-shadow: 0 0 5px #dedede;
+    border-radius: 5px;
+}
+#user-search {
+    margin-bottom: 30px;
+}

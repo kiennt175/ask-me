@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 40);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,6 +94,12 @@
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
+  var items = document.querySelectorAll('.current_page_item');
+  items.forEach(function (item) {
+    item.classList.remove("current_page_item");
+  });
+  document.getElementById("personal").classList.add('current_page_item');
+  document.getElementById("my-profile").classList.add('current_page_item');
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -132,7 +138,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 27:
+/***/ 40:
 /*!*********************************************!*\
   !*** multi ./resources/js/updateProfile.js ***!
   \*********************************************/

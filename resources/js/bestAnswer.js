@@ -16,7 +16,6 @@ $(document).ready(function(){
                 cancelText: "Cancel"
             }).then((e)=>{
                 if ( e == ("confirm")) {
-                    console.log(button)
                     $.ajax({
                         type: "PATCH",
                         url: 'http://localhost:8000/questions/' + questionId + '/bestAnswer',
@@ -24,7 +23,21 @@ $(document).ready(function(){
                             answerId: button.attr('id').replace('best-answer-', '')
                         },
                         success: function(data){
-                            window.location.reload()
+                            // old best answer
+                            var bestAns = $('#best-answer');
+                            bestAns.addClass('hidden');
+                            bestAns.next().removeClass('hidden');
+                            bestAns.attr('id', '')
+                            // new best answer
+                            var newBestAns = $(`#best-answer-${data.answerId}`);
+                            newBestAns.addClass('hidden');
+                            newBestAns.prev().removeClass('hidden').attr('id', 'best-answer');
+                            // delele in progress
+                            var inProgress = $('.progress');
+                            inProgress.prev().removeClass('hidden');
+                            inProgress.remove();
+                            // go to best ans
+                            $('.go-to-best-ans').removeClass('hidden')
                         },
                         error: function(error){
                             

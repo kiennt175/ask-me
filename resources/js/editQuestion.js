@@ -3,7 +3,7 @@ $(document).ready(function () {
     ClassicEditor
         .create(document.querySelector('#editor'), {
             initialData: content,
-            licenseKey: 'NA/p3cJE+GCKGiea4vxkQ9/D/W+5t7xlqTtGJx86N6ELM50d2zNNQQPi',
+            licenseKey: 'DZQGbiL2bGkCEWeQq1FcLBUE5ihAhTBP10AylXlxn1JaWnH9u2YhE+eJ',
             toolbar: {
                 items: [
                     'heading',

@@ -10,7 +10,9 @@ $(document).ready(function () {
         imgs = document.querySelectorAll(".uploaded-image");
         var imgUrls = [];
         imgs.forEach(img => {
-            imgUrls.push(img.getAttribute('data-alt'));
+            if (img.firstChild.getAttribute('src').indexOf('blob') == 0) {
+                imgUrls.push(img.firstChild.getAttribute('src'));
+            }
         });
         var formData = new FormData($("#post-question")[0]);
         console.log(theEditor.getData())
@@ -25,7 +27,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data.response == 1) {
                     if (data.schedule == 0) {
-                        window.location.href = "http://localhost:8000/user/newsfeed"
+                        window.location.href = `http://localhost:8000/questions/${data.question_id}`
                     }
                     if (data.schedule == 1) {
                         window.location.href = "http://localhost:8000/user/pendingQuestions"
@@ -38,7 +40,7 @@ $(document).ready(function () {
                     });
                 };
                 if (data.response == 2) {
-                    tata.error('Ask Question', 'The schedule time needs to be 5 minutes longer than the current time!', {
+                    tata.error('Ask Question', 'The schedule time needs to be longer than the current time!', {
                         duration: 5000,
                         animate: 'slide'
                     });

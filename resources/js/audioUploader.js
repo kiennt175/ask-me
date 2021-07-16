@@ -12,7 +12,8 @@ $(document).ready(function () {
                     BadTypeErrorMessage: "We cannot accept this file type at this time.",
                     acceptedFileTypes: [
                         'ogg',
-                        'mp3'
+                        'mp3',
+                        'oga'
                     ]
                 },
                 options
@@ -47,6 +48,7 @@ $(document).ready(function () {
                     //validate the file
                     var check = checkFile(fileName);
                     if (check === "valid") {
+
                         // move the 'real' one to hidden list
                         $(".hidden-inputs").append($(".file-chooser__input"));
 
@@ -106,6 +108,8 @@ $(document).ready(function () {
                         );
 
                         uploadId++;
+                        $('.file-chooser__input').val('');
+
                     } else {
                         //indicate that the file is not ok
                         $(".file-chooser").addClass("error");

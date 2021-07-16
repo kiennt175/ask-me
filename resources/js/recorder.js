@@ -17,11 +17,14 @@ $(document).ready(function () {
             , mt = document.createElement(media.tag)
             , hf = document.createElement('a')
             ;
+        mt.preload = "auto";
         mt.controls = true;
         mt.src = url;
         hf.href = url;
-        hf.download = `${counter++}${media.ext}`;
-        // hf.innerHTML = `ClickToSave${hf.download}`;
+        hf.download = `${counter++}`;
+        hf.innerHTML = `ClickToSave${hf.download}`;
+        hf.style = "font-size:14px; font-weight: 600; margin-left: 10px";
+        li.style = "margin-bottom: 10px";
         li.appendChild(mt);
         li.appendChild(hf);
         ul.appendChild(li);

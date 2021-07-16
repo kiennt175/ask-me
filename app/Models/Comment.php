@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Answer;
 use App\Models\Question;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = [ 
         'answer_id',
         'user_id',

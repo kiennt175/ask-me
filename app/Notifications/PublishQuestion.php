@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Pusher\Pusher;
 
 class PublishQuestion extends Notification
 {
@@ -56,6 +57,18 @@ class PublishQuestion extends Notification
      */
     public function toArray($notifiable)
     {
-        return $this->data;
+        $data = $this->data;
+        $data['noti_id'] = $this->id;
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => 'ap1',
+                'encrypted' => true
+            ]
+        );
+        $pusher->trigger('PublishQuestionNotiEvent', 'publish-question', $data);
+        return $data;
     }
 }
